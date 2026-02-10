@@ -1,8 +1,8 @@
 # MtB Madeira
-**_Helping visitors discover Madeira through mountain biking_**
+*Helping visitors discover Madeira through mountain biking*
 
 ## Overview
-This project aims to creaete a tool that catalogues, visualizes, and provides mountain bike trail information in Madeira to bikers by integrating spatial analytics and user insights and feedback within a database.
+This project aims to create a tool that catalogues, visualizes, and provides mountain bike trail information in Madeira to bikers by integrating spatial analytics and user insights and feedback within a database.
 
 Group members: Cameron Chalmers & Kana Tateishi
 
@@ -39,4 +39,5 @@ Database integration:
 - The rating table stores rider ratings and feedback.
 
 ## API
+
 
