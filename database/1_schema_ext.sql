@@ -1,9 +1,9 @@
 -- SCHEMAS AND EXTENSION
 
 SELECT SCHEMA IF EXISTS public
-    p as in public
     AUTHORIZATION postgres;
 
 -- PostGIS Extension
 CREATE EXTENSION IF NOT EXISTS postgis;
 CREATE EXTENSION IF NOT EXISTS pg2routing;
+
