@@ -1,4 +1,4 @@
-import psycopg2
+# import psycopg2
 
 DB_NAME = "madeira_trails"   # name of database
 DB_USER = "postgres"         # database user
@@ -28,3 +28,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
