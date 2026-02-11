@@ -3,7 +3,7 @@ import requests
 # FILL THESE IN CAREFULLY:
 CLIENT_ID = "201696"            # e.g. "12345" (from Strava API app page)
 CLIENT_SECRET = "633f43ca5566dc20c8ba22cb10668f193a381cb8"    # long secret string from the same page
-AUTH_CODE = "d1f04e789d296fdc53eeab3f232051470c1b15d8"  # your code
+AUTH_CODE = "a82205bc0b7bc148927a5dc2a5f940762b58af47" # your code
 REDIRECT_URI = "developers.strava.com"        # must match your app settings
 
 def main():
@@ -23,3 +23,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
