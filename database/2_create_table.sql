@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS public.trail_ratings (
 CREATE TABLE IF NOT EXISTS public.users (
 	id               SERIAL PRIMARY KEY,
     user_id 		 BIGINT UNIQUE,
-    name             TEXT NOT NULL,
+    name             TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.poi (
@@ -40,3 +40,4 @@ CREATE TABLE IF NOT EXISTS public.maintenance (
 	lat			  	 TEXT,
 	long			 TEXT
 );
+
