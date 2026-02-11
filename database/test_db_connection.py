@@ -15,7 +15,7 @@ def main():
             host=DB_HOST,
             port=DB_PORT,
         )
-        print("Connected to database!")
+        print("Connected to database :)")
         cur = conn.cursor()
         cur.execute("SELECT COUNT(*) FROM trails;")
         count = cur.fetchone()[0]
@@ -28,4 +28,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
