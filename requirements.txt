@@ -1,3 +1,7 @@
 python
 pandas
 geopandas
+
+psycopg2-binary
+os
+requests
