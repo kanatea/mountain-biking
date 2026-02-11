@@ -1,6 +1,6 @@
 import os
 
-CLIENT_ID = "12345"  # replace with your actual client id
+CLIENT_ID = "201696"  # replace with your actual client id
 REDIRECT_URI = "http://localhost/exchange_token"
 
 url = (
@@ -14,3 +14,4 @@ url = (
 
 print("Open this URL in your browser:")
 print(url)
+
