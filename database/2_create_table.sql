@@ -1,7 +1,6 @@
-DROP TABLE IF EXISTS p.trails
-	p as in public;
+DROP TABLE IF EXISTS public.trails;
 
-CREATE TABLE p.trails (
+CREATE TABLE public.trails (
 	id               SERIAL PRIMARY KEY,
     strava_segment_id BIGINT UNIQUE,
     name             TEXT NOT NULL,
@@ -13,11 +12,10 @@ CREATE TABLE p.trails (
 );
 
 
-CREATE TABLE IF NOT EXISTS p.trail_ratings (
+CREATE TABLE IF NOT EXISTS public.trail_ratings (
 	id SERIAL PRIMARY KEY,
 	trail_id INTEGER REFERENCES trails(id) ON DELETE CASCADE,
 	rating INTEGER CHECK (rating BETWEEN 1 AND 5),
 	comment TEXT,
 	created_at TIMESTAMP DEFAULT NOW()
 );
-
