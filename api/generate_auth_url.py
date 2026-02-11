@@ -1,6 +1,8 @@
-import os
+# import os
 
-CLIENT_ID = "201696"  # replace with your actual client id
+## generate authorization code to activate the connection to the strava api 
+
+CLIENT_ID = "201696"  # replace with your client id
 REDIRECT_URI = "http://localhost/exchange_token"
 
 url = (
@@ -14,4 +16,5 @@ url = (
 
 print("Open this URL in your browser:")
 print(url)
+
 
