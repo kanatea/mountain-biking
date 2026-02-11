@@ -18,7 +18,6 @@ PostgreSQL and PostGIS are used for spatial data storage and analysis.
 
 **Tables**
 trail - Stores trail information (INSERT ATTRIBUTES)
-user - User information for tracking feedback
 ratings - User feedback on trails
 
 ## ETL (Extract, Transform, Load)
@@ -30,8 +29,8 @@ Data sources:
 
 ### Transform
 Data processing:
-- All data is standardized to 
-- Shapefile consolidating all data
+- All data is standardized to EPSG:2942 (Madeira 1936 / UTM zone 28N)
+- Shapefile consolidating basemap with Strava data 
 
 ### Load
 Database integration:
@@ -39,5 +38,6 @@ Database integration:
 - The rating table stores rider ratings and feedback.
 
 ## API
+
 
 
