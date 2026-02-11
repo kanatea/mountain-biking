@@ -1,10 +1,12 @@
-import requests
+# import requests
 
-# FILL THESE IN CAREFULLY:
-CLIENT_ID = "201696"            # e.g. "12345" (from Strava API app page)
-CLIENT_SECRET = "633f43ca5566dc20c8ba22cb10668f193a381cb8"    # long secret string from the same page
-AUTH_CODE = "a82205bc0b7bc148927a5dc2a5f940762b58af47" # your code
-REDIRECT_URI = "developers.strava.com"        # must match your app settings
+## to obtain refresh and access tokens to access data from strava API
+## want a 200 code 
+
+CLIENT_ID = "201696"  # strava client ID
+CLIENT_SECRET = "633f43ca5566dc20c8ba22cb10668f193a381cb8"  # strava secret 
+AUTH_CODE = "a82205bc0b7bc148927a5dc2a5f940762b58af47" # authorization code generated to gain access to strava api from generate_auth_url.py
+REDIRECT_URI = "http://localhost/exchange_token"
 
 def main():
     url = "https://www.strava.com/api/v3/oauth/token"
@@ -24,3 +26,7 @@ def main():
 if __name__ == "__main__":
     main()
 
+
+## Strava tokens
+### 'refresh_token': '410bb7b5c879a1b4aeb0f52cb55deaab9006d964'
+###'access_token': '7c7932203d34c8a597df4eb22cfa577fc743829e' 
