@@ -2,8 +2,12 @@
 CREATE SCHEMA IF NOT EXISTS pa
   AUTHORIZATION postgres;
 
+CREATE SCHEMA IF NOT EXISTS strava
+  AUTHORIZATION postgres;
+
 -- PostGIS Extension
 CREATE EXTENSION postgis;
 CREATE EXTENSION pgrouting;
+
 
 
