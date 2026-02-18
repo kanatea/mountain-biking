@@ -9,53 +9,390 @@
         crossorigin=""/>
         
     <style>
-        html, body {
-        height: 100vh;
-        font-family: verdana, serif;
-        font-size:16px;
-        /*text-align: center*/
-        } 
 
         /* Map from OSM */
         #map { 
-        height: 100vh;
-        width: 100%;
-        position: absolute;
+        height: calc(100vh - 59px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        z-index: 0;
         }
+
+        :root {
+            --moss:    #3a5c2e;
+            --lime:    #a8c840;
+            --white:   #f4f0e8;
+            --muted:   #8a9e78;
+            --bark:    #2c1f0e;
+            }
+
+        html, body {
+            font-family: verdana, serif;
+            color: var(--moss)
+            /*text-align: center*/
+        } 
+
+        /* ── NAV ─────────────────────────────────────────── */
+        nav {
+            background: var(--moss);
+            border-bottom: 3px solid var(--lime);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.6);
+        }
+
+        .nav-inner {
+            display: flex;
+            align-items: stretch;
+            max-width: 1400px;
+            margin: 0 auto;
+            height: 56px;
+        }
+
+        /* Logo / Brand */
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 24px;
+            text-decoration: none;
+            border-right: 1px solid rgba(255,255,255,0.08);
+            flex-shrink: 0;
+        }
+
+        .nav-brand .icon {
+            font-size: 22px;
+            line-height: 1;
+        }
+
+        .nav-brand .wordmark {
+            font-family: verdana, sans-serif;
+            font-weight: 900;
+            font-size: 20px;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--moss);
+        }
+
+        /* Nav items */
+        .nav-items {
+            display: flex;
+            align-items: stretch;
+            list-style: none;
+            flex: 1;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-item > a,
+        .nav-item > button {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            height: 100%;
+            padding: 0 20px;
+            font-family: 'Barlow Condensed', sans-serif;
+            font-weight: 700;
+            font-size: 15px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--moss);
+            text-decoration: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+            white-space: nowrap;
+        }
+
+        .nav-item > a:hover,
+        .nav-item > button:hover,
+        .nav-item.open > button {
+            background: rgba(168,200,64,0.12);
+            color: var(--lime);
+        }
+
+        .nav-item > button .chevron {
+            font-size: 10px;
+            transition: transform 0.2s;
+        }
+        .nav-item.open > button .chevron {
+            transform: rotate(180deg);
+        }
+
+        /* Dropdown panels */
+        .dropdown {
+            display: none;
+            position: absolute;
+            top: calc(100% + 3px);
+            left: 0;
+            background: var(--muted);
+            border: 1px solid rgba(168,200,64,0.25);
+            border-top: 3px solid var(--lime);
+            min-width: 220px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+            animation: dropIn 0.18s ease;
+            z-index: 1001;
+        }
+        .nav-item.open .dropdown { display: block; }
+
+        @keyframes dropIn {
+            from { opacity: 0; transform: translateY(-6px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .dropdown-section {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+        }
+        .dropdown-section:last-child { border-bottom: none; }
+
+        .dropdown-label {
+            font-family: verdana, sans-serif;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--moss);
+            padding: 6px 18px 4px;
+        }
+
+         .dropdown a, .dropdown button.filter-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 9px 18px;
+            font-family: 'Barlow', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--white);
+            text-decoration: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            text-align: left;
+            transition: background 0.12s, color 0.12s;
+        }
+    
+        .dropdown a:hover, .dropdown button.filter-btn:hover {
+            background: rgba(168,200,64,0.1);
+            color: var(--lime);
+        }
+
+        /* Pill filters (for filter dropdown) */
+        .filter-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 10px 18px;
+        }
+        .pill {
+            font-family: verdana, sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            padding: 5px 12px;
+            border-radius: 20px;
+            border: 1.5px solid rgba(168,200,64,0.35);
+            background: transparent; 
+            color: var(--white);
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .pill:hover, .pill.active {
+            border-color: var(--white);
+            color: var(--white);
+            background: rgba(168,200,64,0.1);
+        }
+
+         /* Search & CTA on right */
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 16px;
+            margin-left: auto;
+        }
+
+        .nav-search {
+            display: flex;
+            align-items: center;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 6px;
+            padding: 0 12px;
+            gap: 8px;
+            height: 34px;
+        }
+    
+        .nav-search input {
+            background: none;
+            border: none;
+            outline: none;
+            color: var(--moss);
+            font-family: verdana, sans-serif;
+            font-size: 13px;
+            width: 160px;
+        }
+    
+        .nav-search input::placeholder { color: var(--moss); }
+        .nav-search .search-icon { color: var(--moss); font-size: 13px; }
+
+        .btn-cta {
+            font-family: verdana, sans-serif;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            background: var(--lime);
+            color: var(--bark);
+            border: none;
+            border-radius: 6px;
+            padding: 0 16px;
+            height: 34px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .btn-cta:hover { background: #c0e04a; }
+
+    
     </style>
     </head>
 
+
+
     <body>
         <!-- wtf-->
-            
-         <header>
-            <div class="logo">
-                 <div class="header-text">
-                    <h1><span class="name">MtB Madeira</span></h1>
-                 </div>
-             </div>
-        </header>
+        <div class="nav-inner">
 
-            <div class="menu-bar">
+            <!-- Title -->
+            <a href="#" class="nav-brand">
+                <!-- <h1><img src="MTB_Madeira.png" alt="logo" class="logo"></h1> -->
+                <span class="wordmark">MtB Madeira</span>
+            </a>
+
+        <!--<div class="menu-bar">
                 <div class="menu">
-					<!-- Search box -->
+					// Search box 
 					<li class="search-box">
 							<i class="bx bx-search icon"></i>
 							<input type="search" id="searchInput" style="font-size: 22px" placeholder="Search...">
 					</li>
 			    </div>
+            </div> -->
+
+            <!-- Nav items -->
+            <ul class="nav-items">
+
+            <!-- Top Trails -->
+            <li class="nav-item" id="item-trails">
+                <button onclick="toggleDropdown('item-trails')">
+                    Top Trails <span class="chevron">▼</span>
+                </button>
+                <div class="dropdown">
+                    <div class="dropdown-section">
+                        <div class="dropdown-label">
+                        <a href="#">Highest Rated</a>
+                        <a href="#">Most Rated</a>
+                    </div>
+                    <div class="dropdown-section">
+                        <div class="dropdown-label">By Difficulty</div>
+                        <a href="#">🟢 Best Beginner Trails</a>
+                        <a href="#">🔵 Best Intermediate</a>
+                        <a href="#">⚫ Best Expert Lines</a>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Filter By -->
+            <li class="nav-item" id="item-filter">
+                <button onclick="toggleDropdown('item-filter')">
+                    Filter By <span class="chevron">▼</span>
+                </button>
+                <div class="dropdown" style="min-width:280px">
+                    <div class="dropdown-section">
+                        <div class="dropdown-label">Difficulty</div>
+                        <div class="filter-pills">
+                            <button class="pill active">All</button>
+                            <button class="pill">🟢 Green</button>
+                            <button class="pill">🔵 Blue</button>
+                            <button class="pill">⚫ Black</button>
+                        </div>
+                    </div>
+                    <div class="dropdown-section">
+                        <div class="dropdown-label">Distance</div>
+                        <div class="filter-pills">
+                            <button class="pill">Under 5 km</button>
+                            <button class="pill">5–10 km</button>
+                            <button class="pill">10+ km</button>
+                        </div>
+                    </div>
+                    <div class="dropdown-section">
+                        <div class="dropdown-label">Elevation Gain</div>
+                        <div class="filter-pills">
+                            <button class="pill">< 500 m</button>
+                            <button class="pill">500–1500 m</button>
+                            <button class="pill">1500+ m</button>
+                        </div>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Right side -->
+            <div class="nav-right">
+                <div class="nav-search">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" placeholder="Search trails…" />
+                </div>
             </div>
+        </div>
 
-            <div id="map"></div>
+        <script>
+            function toggleDropdown(id) {
+                const item = document.getElementById(id);
+                const isOpen = item.classList.contains('open');
+                // close all
+                document.querySelectorAll('.nav-item.open').forEach(el => el.classList.remove('open'));
+                if (!isOpen) item.classList.add('open');
+            }
 
-            <!-- leaflet stuff i will cry-->
-             <script 
-             src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-             crossorigin="">
-            </script>
+            // Close on outside click
+            document.addEventListener('click', e => {
+                if (!e.target.closest('.nav-item')) {
+                    document.querySelectorAll('.nav-item.open').forEach(el => el.classList.remove('open'));
+                }
+            });
+
+            // Pill toggle
+            document.querySelectorAll('.filter-pills').forEach(group => {
+                group.querySelectorAll('.pill').forEach(pill => {
+                    pill.addEventListener('click', () => {
+                        group.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+                        pill.classList.add('active');
+                    });
+                });
+            });
+        </script>
+
+        <div id="map"></div>
+
+        <!-- leaflet stuff i will cry-->
+        <script 
+            src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin="">
+        </script>
             
-             <script>
+        <script>
 
                 var map = L.map('map').setView([32.73, -17], 11.5);
 
@@ -63,6 +400,8 @@
                     maxZoom: 19,
                     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                 }).addTo(map);
+
+
 
 
                 // Fetch trails from your API
@@ -95,7 +434,8 @@
                     .catch(err => {
                     console.error('Error loading trails:', err);
                     });
-             </script>
+        </script>
+
     </body>
 </html>
 
