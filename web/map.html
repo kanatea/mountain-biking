@@ -394,7 +394,7 @@
 
 
 
-                // Fetch trails from your API
+                 // Fetch trails from your API
                 fetch('/api/trails')
                     .then(response => response.json())
                     .then(trails => {
@@ -403,11 +403,25 @@
                         var start = [trail.start_lat, trail.start_lon];
                         var end = [trail.end_lat, trail.end_lon];
 
-                        // Draw a line between start and end
-                        var line = L.polyline([start, end], { color: 'blue' }).addTo(map);
+                        let line;
 
-                        // Optional: add a marker at start
+                        // If we have a polyline, use the full shape
+                        if (trail.polyline) {
+                        try {
+                            line = L.Polyline.fromEncoded(trail.polyline, { color: 'blue' }).addTo(map);
+                        } catch (e) {
+                            console.error('Error decoding polyline for trail', trail.strava_segment_id, e);
+                            // Fallback to straight line if decoding fails
+                            line = L.polyline([start, end], { color: 'blue' }).addTo(map);
+                        }
+                        } else {
+                        // Fallback: straight line between start and end
+                        line = L.polyline([start, end], { color: 'blue' }).addTo(map);
+                        }
+
+                        // Add a marker at start
                         var marker = L.circleMarker(start, { radius: 4, color: 'red' }).addTo(map);
+
 
                         var popupContent = `
                             <strong>${trail.name}</strong><br />
@@ -428,4 +442,5 @@
 
     </body>
 </html>
+
 
