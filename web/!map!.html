@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>MtB Madeira</title>
+
+        <!-- leaflet css map stuff-->
+        <link type="text/css" rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+        crossorigin=""/>
+        
+    <style>
+        html, body {
+        height: 100vh;
+        font-family: verdana, serif;
+        font-size:16px;
+        /*text-align: center*/
+        } 
+
+        /* Map from OSM */
+        #map { 
+        height: 100vh;
+        width: 100%;
+        position: absolute;
+        }
+    </style>
+    </head>
+
+    <body>
+        <!-- wtf-->
+            
+         <header>
+            <div class="logo">
+                 <div class="header-text">
+                    <h1><span class="name">MtB Madeira</span></h1>
+                 </div>
+             </div>
+        </header>
+
+            <div class="menu-bar">
+                <div class="menu">
+					<!-- Search box -->
+					<li class="search-box">
+							<i class="bx bx-search icon"></i>
+							<input type="search" id="searchInput" style="font-size: 22px" placeholder="Search...">
+					</li>
+			    </div>
+            </div>
+
+            <div id="map"></div>
+
+            <!-- leaflet stuff i will cry-->
+             <script 
+             src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+             crossorigin="">
+            </script>
+            
+            <!-- Plugin to decode encoded polylines -->
+            <script src="https://cdn.jsdelivr.net/npm/polyline-encoded@0.0.9/Polyline.encoded.js"></script>
+            
+            <script>
+                var map = L.map('map').setView([32.73, -17], 11.5);
+
+                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                }).addTo(map);
+
+
+                // Fetch trails from your API
+                fetch('/api/trails')
+                    .then(response => response.json())
+                    .then(trails => {
+                    trails.forEach(trail => {
+                        if (trail.start_lat && trail.start_lon && trail.end_lat && trail.end_lon) {
+                        var start = [trail.start_lat, trail.start_lon];
+                        var end = [trail.end_lat, trail.end_lon];
+
+                        let line;
+
+                        // If we have a polyline, use the full shape
+                        if (trail.polyline) {
+                        try {
+                            line = L.Polyline.fromEncoded(trail.polyline, { color: 'blue' }).addTo(map);
+                        } catch (e) {
+                            console.error('Error decoding polyline for trail', trail.strava_segment_id, e);
+                            // Fallback to straight line if decoding fails
+                            line = L.polyline([start, end], { color: 'blue' }).addTo(map);
+                        }
+                        } else {
+                        // Fallback: straight line between start and end
+                        line = L.polyline([start, end], { color: 'blue' }).addTo(map);
+                        }
+
+                        // Add a marker at start
+                        var marker = L.circleMarker(start, { radius: 4, color: 'red' }).addTo(map);
+
+
+                        var popupContent = `
+                            <strong>${trail.name}</strong><br />
+                            Distance: ${trail.distance_m} m<br />
+                            Elevation gain: ${trail.elevation_gain_m} m<br />
+                            Avg grade: ${trail.avg_grade} %<br />
+                            Strava ID: ${trail.strava_segment_id}
+                            `;
+                        line.bindPopup(popupContent);
+                        marker.bindPopup(popupContent);
+                        }
+                    });
+                    })
+                    .catch(err => {
+                    console.error('Error loading trails:', err);
+                    });
+             </script>
+    </body>
+</html>
+
