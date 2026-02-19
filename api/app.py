@@ -1,0 +1,90 @@
+from flask import Flask, jsonify, render_template
+import psycopg2
+
+DB_NAME = "madeira_trails"   
+DB_USER = "postgres"         
+DB_PASSWORD = "postgres"
+DB_HOST = "localhost"
+DB_PORT = "5432"
+
+app = Flask(__name__)
+
+def get_db_connection():
+    conn = psycopg2.connect(
+        dbname = DB_NAME,
+        user = DB_USER,
+        password = DB_PASSWORD,
+        host = DB_HOST,
+        port = DB_PORT,
+    )
+    return conn
+
+@app.get("/api/trails")
+def get_trails():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT
+            id,
+            strava_segment_id,
+            name,
+            region,
+            distance_m,
+            elevation_gain_m,
+            avg_grade,
+            start_lat,
+            start_lon,
+            end_lat,
+            end_lon,
+            polyline,
+            climb_category,
+            climb_category_desc
+        FROM strava.trails;
+    """)
+    rows = cur.fetchall()
+    cur.close()
+    conn.close()
+
+    # convert rows to list of dicts
+    trails = []
+    for row in rows:
+        (
+            id_,
+            strava_segment_id,
+            name,
+            region,
+            distance_m,
+            elevation_gain_m,
+            avg_grade,
+            start_lat,
+            start_lon,
+            end_lat,
+            end_lon,
+            polyline,
+            climb_cat,
+            climb_cat_desc,
+        ) = row
+
+        trails.append({
+            "id": id_,
+            "strava_segment_id": strava_segment_id,
+            "name": name,
+            "region": region,
+            "distance_m": distance_m,
+            "elevation_gain_m": elevation_gain_m,
+            "avg_grade": float(avg_grade) if avg_grade is not None else None,
+            "start_lat": start_lat,
+            "start_lon": start_lon,
+            "end_lat": end_lat,
+            "end_lon": end_lon,
+            "polyline": polyline,
+        })
+
+    return jsonify(trails)
+
+@app.get("/")
+def index():
+    return render_template("map.html")
+
+if __name__ == "__main__":
+    app.run(debug=True)
