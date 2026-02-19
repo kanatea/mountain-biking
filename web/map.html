@@ -501,7 +501,11 @@
             <div class="nav-right">
                 <div class="nav-search">
                     <span class="search-icon">🔍</span>
-                    <input type="text" placeholder="Search trails…" />
+                     <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Search trails…"
+                    />
                 </div>
             </div>
         </div>
@@ -619,6 +623,8 @@
                     });
                 });
             });
+
+
         </script>
 
 
@@ -643,6 +649,11 @@
                     maxZoom: 19,
                     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                 }).addTo(map);
+                
+
+                // Store all trail layers for filtering/search
+                var trailLayers = [];
+
 
                  // Fetch trails from your API
                 fetch('/api/trails')
@@ -654,6 +665,42 @@
                         var end = [trail.end_lat, trail.end_lon];
 
                         let line;
+
+                    // Search box functions    
+                        function filterTrailsByName(query) {
+                        var q = (query || "").trim().toLowerCase();
+
+                        trailLayers.forEach(obj => {
+                            var name = (obj.trail.name || "").toLowerCase();
+
+                            if (!q || name.includes(q)) {
+                            // Show matching (or all, if query empty)
+                            if (!map.hasLayer(obj.line)) {
+                                obj.line.addTo(map);
+                            }
+                            if (!map.hasLayer(obj.marker)) {
+                                obj.marker.addTo(map);
+                            }
+                            } else {
+                            // Hide non-matching
+                            if (map.hasLayer(obj.line)) {
+                                map.removeLayer(obj.line);
+                            }
+                            if (map.hasLayer(obj.marker)) {
+                                map.removeLayer(obj.marker);
+                            }
+                            }
+                        });    
+                    }
+
+                    // Hook up the search box to the filter
+                        var searchInput = document.getElementById('searchInput');
+                        if (searchInput) {
+                        searchInput.addEventListener('input', function () {
+                            filterTrailsByName(this.value);
+                        });
+                        }
+
 
                         // If we have a polyline, use the full shape
                         if (trail.polyline) {
@@ -682,6 +729,13 @@
                             `;
                         line.bindPopup(popupContent);
                         marker.bindPopup(popupContent);
+
+                         // Save for search/filtering
+                        trailLayers.push({
+                        trail: trail,
+                        line: line,
+                        marker: marker
+                        });
                         }
                     });
                     })
