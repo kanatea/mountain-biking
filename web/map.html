@@ -393,9 +393,12 @@
                         <div class="dropdown-label">Difficulty</div>
                         <div class="filter-pills">
                             <button class="pill active">All</button>
-                            <button class="pill">🟢 Green</button>
-                            <button class="pill">🔵 Blue</button>
-                            <button class="pill">⚫ Black</button>
+                            <button class="pill">Not Categorized</button>
+                            <button class="pill">🟢 Category 4</button>
+                            <button class="pill">🔵 Category 3</button>
+                            <button class="pill">🔴 Category 2</button>
+                            <button class="pill">⚫ Category 1</button>
+                            <button class="pill">🟠 Hors Catégorie</button>
                         </div>
                     </div>
                     <div class="dropdown-section">
@@ -438,10 +441,10 @@
                         <div class="review-trail-label">Problem Type</div>
                         <div class="filter-pills" id="report-pills">
                             <button class="pill active">All</button>
-                            <button class="pill">🌲 Fallen Tree</button>
-                            <button class="pill">🕳 Trail Damage</button>
-                            <button class="pill">⚠️ Safety Hazard</button>
-                            <button class="pill">🪧 Signage</button>
+                            <button class="pill">Fallen Tree</button>
+                            <button class="pill">Trail Damage</button>
+                            <button class="pill">Safety Hazard</button>
+                            <button class="pill">Signage</button>
                             <button class="pill">Other</button>
                         </div>
                     <div class="review-trail-label">Description</div>
@@ -462,7 +465,6 @@
                 <div class="dropdown-section">
                     <div class="dropdown-label">Location</div>
                     <div class="review-form" style="padding: 4px 18px 12px; gap: 8px;">
-                        <input type="text" class="review-trail-input" id="nearme-location" placeholder="Enter region" />
                         <button class="review-submit" id="nearme-submit">📍 Use My Location</button>
                     </div>
                 </div>
@@ -653,6 +655,7 @@
                     pill.addEventListener('click', () => {
                         group.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
                         pill.classList.add('active');
+                        filterTrails(pill.textContent.trim());
                     });
                 });
             });
@@ -674,6 +677,33 @@
         <!-- Plugin to decode encoded polylines -->
         <script src="https://cdn.jsdelivr.net/npm/polyline-encoded@0.0.9/Polyline.encoded.js"></script>
 
+        <script>
+            // Pill categories
+            function filterTrails(selectedCategory) {
+                const categoryMap = {
+                    'All':              null,
+                    'Not Categorized':        'Not Categorized',
+                    '🟢 Category 4':         'Category 4',
+                    '🔵 Category 3':         'Category 3',
+                    '🔴 Category 2':         'Category 2',
+                    '⚫ Category 1':         'Category 1',
+                    '🟠 Hors Catégorie':     'Hors Catégorie'
+                };
+
+                trailLayers.forEach(obj => {
+                    const mapped = categoryMap[selectedCategory];
+                    const show = !mapped || obj.trail.climb_category_desc === mapped;
+                    if (show) {
+                    obj.line.addTo(map);
+                    obj.marker.addTo(map);
+                    } else {
+                    map.removeLayer(obj.line);
+                    map.removeLayer(obj.marker);
+                    }
+                });
+            }
+        </script>
+        
         <script>
 
                 var map = L.map('map').setView([32.73, -17], 11.5);
@@ -734,30 +764,39 @@
                         });
                         }
 
+                        //Color code trails
+                        function getClimbColor(category) {
+                            if (category == "Not Categorized") return 'gray';
+                            if (category == "Category 4")  return '#64AD07'; // green  — easy
+                            if (category == "Category 3")  return '#4a90d9'; // blue   — moderate
+                            if (category == "Category 2")  return 'red';//red
+                            if (category == "Category 1")  return '#4a90d9'; // black  — hard
+                            if (category == "Hors Catégorie")  return 'orange'; // orange — very steep
+                            return 'gray';
+                         }
 
                         // If we have a polyline, use the full shape
                         if (trail.polyline) {
                         try {
-                            line = L.Polyline.fromEncoded(trail.polyline, { color: 'blue' }).addTo(map);
+                            line = L.Polyline.fromEncoded(trail.polyline, { color: getClimbColor(trail.climb_category_desc) }).addTo(map);
                         } catch (e) {
                             console.error('Error decoding polyline for trail', trail.strava_segment_id, e);
                             // Fallback to straight line if decoding fails
-                            line = L.polyline([start, end], { color: 'blue' }).addTo(map);
+                            line = L.polyline([start, end], { color: getClimbColor(trail.climb_category_desc) }).addTo(map);
                         }
                         } else {
                         // Fallback: straight line between start and end
-                        line = L.polyline([start, end], { color: 'blue' }).addTo(map);
+                        line = L.polyline([start, end], { color: getClimbColor(trail.climb_category_desc) }).addTo(map);
                         }
 
                         // Add a marker at start
-                        var marker = L.circleMarker(start, { radius: 4, color: 'red' }).addTo(map);
-
+                        var marker = L.circleMarker(start, { radius: 4, color: 'green' }).addTo(map);
 
                         var popupContent = `
                             <strong>${trail.name}</strong><br />
                             Distance: ${trail.distance_m} m<br />
                             Elevation gain: ${trail.elevation_gain_m} m<br />
-                            Avg grade: ${trail.avg_grade} %<br />
+                            Climb grade: ${trail.climb_category_desc} <br />
                             Strava ID: ${trail.strava_segment_id}
                             `;
                         line.bindPopup(popupContent);
@@ -824,4 +863,5 @@
 
     </body>
 </html>
+
 
