@@ -438,10 +438,10 @@
                         <div class="review-trail-label">Problem Type</div>
                         <div class="filter-pills" id="report-pills">
                             <button class="pill active">All</button>
-                            <button class="pill">🌲 Fallen Tree</button>
-                            <button class="pill">🕳 Trail Damage</button>
-                            <button class="pill">⚠️ Safety Hazard</button>
-                            <button class="pill">🪧 Signage</button>
+                            <button class="pill">Fallen Tree</button>
+                            <button class="pill">Trail Damage</button>
+                            <button class="pill">Safety Hazard</button>
+                            <button class="pill">Signage</button>
                             <button class="pill">Other</button>
                         </div>
                     <div class="review-trail-label">Description</div>
@@ -724,7 +724,7 @@
                             <strong>${trail.name}</strong><br />
                             Distance: ${trail.distance_m} m<br />
                             Elevation gain: ${trail.elevation_gain_m} m<br />
-                            Climb grade: ${trail.climb_grade} <br />
+                            Climb grade: ${trail.climb_category_desc} <br />
                             Strava ID: ${trail.strava_segment_id}
                             `;
                         line.bindPopup(popupContent);
@@ -746,5 +746,6 @@
 
     </body>
 </html>
+
 
 
