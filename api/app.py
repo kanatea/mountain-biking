@@ -38,8 +38,7 @@ def get_trails():
             end_lon,
             polyline,
             climb_category,
-            climb_category_desc,
-            climb_grade
+            climb_category_desc
         FROM strava.trails;
     """)
     rows = cur.fetchall()
@@ -64,7 +63,6 @@ def get_trails():
             polyline,
             climb_cat,
             climb_cat_desc,
-            climb_grade,
         ) = row
 
         trails.append({
@@ -75,7 +73,7 @@ def get_trails():
             "distance_m": distance_m,
             "elevation_gain_m": elevation_gain_m,
             "avg_grade": float(avg_grade) if avg_grade is not None else None,
-            "climb_grade": climb_grade
+            "climb_category_desc": climb_category_desc
             "start_lat": start_lat,
             "start_lon": start_lon,
             "end_lat": end_lat,
@@ -92,3 +90,4 @@ def index():
 if __name__ == "__main__":
 
     app.run(debug=True)
+
