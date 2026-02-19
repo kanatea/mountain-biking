@@ -381,9 +381,11 @@
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
             crossorigin="">
         </script>
-            
-        <script>
 
+        <!-- Plugin to decode encoded polylines -->
+        <script src="https://cdn.jsdelivr.net/npm/polyline-encoded@0.0.9/Polyline.encoded.js"></script>
+        
+        <script>
                 var map = L.map('map').setView([32.73, -17], 11.5);
 
                 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -442,5 +444,6 @@
 
     </body>
 </html>
+
 
 
