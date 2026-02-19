@@ -1,24 +1,21 @@
 DROP TABLE IF EXISTS strava.trails;
 
 CREATE TABLE IF NOT EXISTS strava.trails
-(
-    id integer NOT NULL DEFAULT nextval('strava.trails_id_seq'::regclass),
-    strava_segment_id bigint,
-    name text COLLATE pg_catalog."default" NOT NULL,
-    region text COLLATE pg_catalog."default" DEFAULT 'Madeira'::text,
-    distance_m integer,
-    elevation_gain_m integer,
-    avg_grade numeric,
-    created_at timestamp without time zone DEFAULT now(),
-    start_lat double precision,
-    start_lon double precision,
-    end_lat double precision,
-    end_lon double precision,
-    polyline text COLLATE pg_catalog."default",
-    climb_category integer,
-    climb_category_desc text COLLATE pg_catalog."default",
-    CONSTRAINT trails_pkey PRIMARY KEY (id),
-    CONSTRAINT trails_strava_segment_id_key UNIQUE (strava_segment_id)
+(    id               SERIAL PRIMARY KEY,
+    strava_segment_id BIGINT UNIQUE,
+    name             TEXT NOT NULL,
+    region           TEXT DEFAULT 'Madeira',
+    distance_m       INTEGER,
+    elevation_gain_m INTEGER,
+    avg_grade        NUMERIC,
+    created_at       TIMESTAMP DEFAULT NOW(),
+    start_lat        DOUBLE PRECISION,
+    start_lon        DOUBLE PRECISION,
+    end_lat          DOUBLE PRECISION,
+    end_lon          DOUBLE PRECISION,
+    climb_category   INTEGER,
+    climb_category_desc TEXT,
+    polyline         TEXT
 );
 
 
@@ -60,4 +57,5 @@ CREATE TABLE IF NOT EXISTS pa.maintenance (
 	lat			  	 TEXT,
 	long			 TEXT
 );
+
 
