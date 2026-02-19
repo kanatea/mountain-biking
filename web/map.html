@@ -438,10 +438,10 @@
                         <div class="review-trail-label">Problem Type</div>
                         <div class="filter-pills" id="report-pills">
                             <button class="pill active">All</button>
-                            <button class="pill">Fallen Tree</button>
-                            <button class="pill">Trail Damage</button>
-                            <button class="pill">Safety Hazard</button>
-                            <button class="pill">Signage</button>
+                            <button class="pill">🌲 Fallen Tree</button>
+                            <button class="pill">🕳 Trail Damage</button>
+                            <button class="pill">⚠️ Safety Hazard</button>
+                            <button class="pill">🪧 Signage</button>
                             <button class="pill">Other</button>
                         </div>
                     <div class="review-trail-label">Description</div>
@@ -458,12 +458,14 @@
                 <button onclick="toggleDropdown('item-nearme')">
                     📍 Near Me <span class="chevron">▼</span>
                 </button>
+                <div class="dropdown">
                 <div class="dropdown-section">
                     <div class="dropdown-label">Location</div>
                     <div class="review-form" style="padding: 4px 18px 12px; gap: 8px;">
                         <input type="text" class="review-trail-input" id="nearme-location" placeholder="Enter region" />
                         <button class="review-submit" id="nearme-submit">📍 Use My Location</button>
                     </div>
+                </div>
                 </div>
             </li>
 
@@ -560,36 +562,67 @@
             thanks.style.display = 'block';
             document.querySelector('#item-reviews .dropdown-section').appendChild(thanks);
             });
-    // Near Me geolocation  cqmmy cqmmy CAMMY
-            document.querySelector('#nearme-submit').addEventListener('click', () => {
-                const manualLocation = document.querySelector('#nearme-location').value.trim();
+
+            // Near Me geolocation
+            document.addEventListener('DOMContentLoaded', () => {
+            const nearMeBtn = document.querySelector('#nearme-submit');
+            if (!nearMeBtn) return;
+
+            nearMeBtn.addEventListener('click', () => {
+                const manualLocationInput = document.querySelector('#nearme-location');
+                const manualLocation = manualLocationInput ? manualLocationInput.value.trim() : '';
+
                 if (manualLocation) {
-                    alert(`Searching trails near: ${manualLocation}`);
-                    return;
+                alert(`Searching trails near: ${manualLocation}`);
+                return;
                 }
+
                 if (!navigator.geolocation) {
-                    alert('Geolocation is not supported by your browser.'); return;
-                }  
-            const btn = document.querySelector('#nearme-submit');
-            btn.textContent = '⏳ Locating…';
-            btn.disabled = true;
-            navigator.geolocation.getCurrentPosition(
+                alert('Geolocation is not supported by your browser.');
+                return;
+                }
+
+                const btn = nearMeBtn;
+                btn.textContent = '⏳ Locating…';
+                btn.disabled = true;
+
+                navigator.geolocation.getCurrentPosition(
                 pos => {
                     btn.textContent = 'Location Found!';
                     btn.style.background = 'var(--moss)';
-            // Here you'd pass pos.coords.latitude & pos.coords.longitude to your Leaflet map
-                setTimeout(() => {
+
+                    const lat = pos.coords.latitude;
+                    const lon = pos.coords.longitude;
+                    const radiusKm = 5;
+
+                    // Show user's location on the map
+                    L.marker([lat, lon], { title: 'You are here' }).addTo(map);
+                    L.circle([lat, lon], {
+                    radius: radiusKm * 1000,
+                    color: 'green',
+                    fillOpacity: 0.1
+                    }).addTo(map);
+
+                    // Filter trails to those near the user
+                    if (typeof showTrailsNear === 'function') {
+                    showTrailsNear(lat, lon, radiusKm);
+                    } else {
+                    console.warn('showTrailsNear is not defined.');
+                    }
+
+                    setTimeout(() => {
                     btn.textContent = '📍 Use My Location';
                     btn.style.background = '';
                     btn.disabled = false;
-                }, 2500);
+                    }, 2500);
                 },
-            err => {
-                btn.textContent = '📍 Use My Location';
-                btn.disabled = false;
-                alert('Could not get your location. Try entering it manually.');
-            }
-            );
+                err => {
+                    btn.textContent = '📍 Use My Location';
+                    btn.disabled = false;
+                    alert('Could not get your location. Try entering it manually.');
+                }
+                );
+            });
             });
 
              // Report a Problem submit
@@ -724,20 +757,65 @@
                             <strong>${trail.name}</strong><br />
                             Distance: ${trail.distance_m} m<br />
                             Elevation gain: ${trail.elevation_gain_m} m<br />
-                            Climb grade: ${trail.climb_category_desc} <br />
+                            Avg grade: ${trail.avg_grade} %<br />
                             Strava ID: ${trail.strava_segment_id}
                             `;
                         line.bindPopup(popupContent);
                         marker.bindPopup(popupContent);
 
-                         // Save for search/filtering
+                         // Save layers for search/filtering
                         trailLayers.push({
                         trail: trail,
                         line: line,
                         marker: marker
                         });
                         }
+
+                        // function to compute distance (Haversine)
+                        function distanceInKm(lat1, lon1, lat2, lon2) {
+                        var R = 6371;
+                        var dLat = (lat2 - lat1) * Math.PI / 180;
+                        var dLon = (lon2 - lon1) * Math.PI / 180;
+                        var a =
+                            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                            Math.cos(lat1 * Math.PI / 180) *
+                            Math.cos(lat2 * Math.PI / 180) *
+                            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+                        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                        return R * c;
+                        }
                     });
+
+                    // "Near me" filter function
+                    function showTrailsNear(lat, lon, radiusKm) {
+                    var nearbyCount = 0;
+
+                    trailLayers.forEach(obj => {
+                        var t = obj.trail;
+                        if (!t.start_lat || !t.start_lon) {
+                        if (map.hasLayer(obj.line)) map.removeLayer(obj.line);
+                        if (map.hasLayer(obj.marker)) map.removeLayer(obj.marker);
+                        return;
+                        }
+
+                          var d = distanceInKm(lat, lon, t.start_lat, t.start_lon);
+
+                          if (d <= radiusKm) {
+                            if (!map.hasLayer(obj.line)) obj.line.addTo(map);
+                            if (!map.hasLayer(obj.marker)) obj.marker.addTo(map);
+                            nearbyCount++;
+                            } else {
+                            if (map.hasLayer(obj.line)) map.removeLayer(obj.line);
+                            if (map.hasLayer(obj.marker)) map.removeLayer(obj.marker);
+                            }
+                    });
+
+                     if (nearbyCount > 0) {
+                        map.setView([lat, lon], 13);
+                    } else {
+                        alert('No trails found within ' + radiusKm + ' km of your location.');
+                    }
+                    }
                     })
                     .catch(err => {
                     console.error('Error loading trails:', err);
@@ -746,6 +824,4 @@
 
     </body>
 </html>
-
-
 
