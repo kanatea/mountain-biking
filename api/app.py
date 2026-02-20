@@ -142,6 +142,35 @@ def submit_report():
     conn.close()
     return jsonify({'success': True}), 201
 
+# For ratings
+@app.get("/api/trail_ratings")
+def get_trail_ratings():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT 
+            trail_name,
+            ROUND(AVG(rating), 2) AS avg_rating,
+            COUNT(rating)         AS total_reviews
+        FROM pa.trail_ratings
+        GROUP BY trail_name
+        ORDER BY avg_rating DESC;
+    """)
+    rows = cur.fetchall()
+    cur.close()
+    conn.close()
+
+    ratings = []
+    for row in rows:
+        trail_name, avg_rating, total_reviews = row
+        ratings.append({
+            "trail_name":    trail_name,
+            "avg_rating":    float(avg_rating) if avg_rating else None,
+            "total_reviews": total_reviews
+        })
+
+    return jsonify(ratings)
+
 
 ## To read info from pgadmin to the website
 @app.get("/")
@@ -150,4 +179,5 @@ def index():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
