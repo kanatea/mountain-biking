@@ -442,22 +442,35 @@
                 </div>
             </li>
 
-            <!-- Report a Problem -->
-            <li class="nav-item" id="item-report">
-                <button onclick="toggleDropdown('item-report')">
-                    Report a Problem <span class="chevron">▼</span>
+            <!-- Trail Reviews -->
+            <li class="nav-item" id="item-reviews">
+                <button onclick="toggleDropdown('item-reviews')">
+                    Trail Reviews <span class="chevron">▼</span>
                 </button>
                 <div class="dropdown" style="min-width:300px">
                     <div class="dropdown-section">
-                        <div class="dropdown-label">Submit a Report</div>
-                    <div class="review-form" id="report-form">
-                    <div class="review-trail-label">Trail Name</div>
-                        <input type="text" class="review-trail-input" id="report-trail" placeholder="Name of trail" />
-                    <div class="review-trail-label">Description</div>
-                        <textarea class="review-textarea" id="report-comment" placeholder="Describe the problem — location on trail, severity, any other details…"></textarea>
-                        <button class="review-submit" id="report-submit">Submit Report</button>
+                        <div class="dropdown-label">Leave a Review</div>
+                    <div class="review-form">
+                    <div class="review-trail-label">Username</div>
+                        <input type="text" class="review-trail-input" id="review-username" placeholder="e.g. TrailBlazer42" />
+                        <div class="review-trail-label">Trail name</div>
+                        <input type="text" class="review-trail-input" 
+                            id="review-trail-input"
+                            list="trail-names-list" 
+                            placeholder="Search for a trail…" 
+                            autocomplete="off" />
+                        <div class="review-trail-label">Your Rating</div>
+                        <div class="star-rating" id="star-rating">
+                            <span class="star" data-val="1">★</span>
+                            <span class="star" data-val="2">★</span>
+                            <span class="star" data-val="3">★</span>
+                            <span class="star" data-val="4">★</span>
+                            <span class="star" data-val="5">★</span>
+                        </div>
+                    <div class="review-trail-label">Your Comment</div>
+                        <textarea class="review-textarea" placeholder="How was the trail? Conditions, highlights, tips…"></textarea>
+                        <button class="review-submit" id="review-submit">Submit Review</button>
                     </div>
-                    <div class="review-thanks" id="report-thanks"></div>
                     </div>
                 </div>
             </li>
@@ -479,33 +492,27 @@
                 </div>
             </li>
 
-            <!-- Trail Reviews -->
-            <li class="nav-item" id="item-reviews">
-                <button onclick="toggleDropdown('item-reviews')">
-                    Trail Reviews <span class="chevron">▼</span>
+            <!-- Report a Problem -->
+            <li class="nav-item" id="item-report">
+                <button onclick="toggleDropdown('item-report')">
+                    Report a Problem <span class="chevron">▼</span>
                 </button>
                 <div class="dropdown" style="min-width:300px">
                     <div class="dropdown-section">
-                        <div class="dropdown-label">Leave a Review</div>
-                    <div class="review-form">
-                    <div class="review-trail-label">Username</div>
-                        <input type="text" class="review-trail-input" id="review-username" placeholder="e.g. TrailBlazer42" />
-                        <div class="review-trail-label">Trail name</div>
-                        <input type="text" class="review-trail-input" placeholder="e.g. Eagle Ridge Loop" />
-                        <div class="review-trail-label">Your Rating</div>
-                        <div class="star-rating" id="star-rating">
-                            <span class="star" data-val="1">★</span>
-                            <span class="star" data-val="2">★</span>
-                            <span class="star" data-val="3">★</span>
-                            <span class="star" data-val="4">★</span>
-                            <span class="star" data-val="5">★</span>
-                        </div>
-                    <div class="review-trail-label">Your Comment</div>
-                        <textarea class="review-textarea" placeholder="How was the trail? Conditions, highlights, tips…"></textarea>
-                        <button class="review-submit">Submit Review</button>
+                        <div class="dropdown-label">Submit a Report</div>
+                    <div class="review-form" id="report-form">
+                    <div class="review-trail-label">Trail Name</div>
+                        <input type="text" class="review-trail-input" 
+                            id="report-trail" 
+                            list="trail-names-list" 
+                            placeholder="Search for a trail…" 
+                            autocomplete="off" />
+                    <div class="review-trail-label">Description</div>
+                        <textarea class="review-textarea" id="report-comment" placeholder="Describe the problem — location on trail, severity, any other details…"></textarea>
+                        <button class="review-submit" id="report-submit">Submit Report</button>
                     </div>
+                    <div class="review-thanks" id="report-thanks"></div>
                     </div>
-                
                 </div>
             </li>
 
@@ -521,8 +528,12 @@
                 </div>
             </div>
         </div>
+    
+    <!-- for autopopulating trail name search bar -->
+        <datalist id="trail-names-list">
+        </datalist>
 
-        <!-- BEGIN NAV/UI SCRIPT -->
+    <!-- BEGIN NAV/UI SCRIPT -->
         <script>
             function toggleDropdown(id) {
                 const item = document.getElementById(id);
@@ -558,22 +569,38 @@
             });
 
             // Review submit
-            document.querySelector('.review-submit').addEventListener('click', () => {
-                const trail = document.querySelector('.review-trail-input').value.trim();
-                const username = document.querySelector('#review-username').value.trim();
-                const comment = document.querySelector('.review-textarea').value.trim();
-                if (!username) { alert('Please enter a username!'); return; }
+            document.querySelector('#review-submit').addEventListener('click', () => {
+                const trail_name = document.querySelector('#review-trail-input').value.trim();
+                const username   = document.querySelector('#review-username').value.trim();
+                const comment    = document.querySelector('.review-textarea').value.trim();
+                if (!username)       { alert('Please enter a username!'); return; }
+                if (!trail_name)     { alert('Please enter a trail name!'); return; }
+                if (!isValidTrail(trail_name)) { alert('Please select a valid trail from the list.'); return; }
                 if (!selectedRating) { alert('Please select a star rating!'); return; }
-                if (!trail) { alert('Please enter a trail name!'); return; }
-             // Swap form for thank-you message
-            document.querySelector('.review-form').style.display = 'none';
-            const thanks = document.createElement('div');
-            thanks.className = 'review-thanks';
-            thanks.innerHTML = `✅ Thanks, ${username}!<br><span style="color:var(--white);font-size:13px;font-weight:400">${trail}</span><br>${'★'.repeat(selectedRating)}${'☆'.repeat(5 - selectedRating)}`;
-            thanks.style.display = 'block';
-            document.querySelector('#item-reviews .dropdown-section').appendChild(thanks);
+
+                fetch('/api/reviews', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, trail_name, rating: selectedRating, comment })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        document.querySelector('.review-form').style.display = 'none';
+                        const thanks = document.createElement('div');
+                        thanks.className = 'review-thanks';
+                        thanks.innerHTML = `Thank you, ${username}! :-)`;
+                        thanks.style.display = 'block';
+                        document.querySelector('#item-reviews .dropdown-section').appendChild(thanks);
+                    }
+                })
+                .catch(err => {
+                    console.error('Error submitting review:', err);
+                    alert('Something went wrong. Please try again :-( ');
+                });
             });
-    // Near Me geolocation  cqmmy cqmmy CAMMY
+            
+            // Near Me geolocation 
             async function geocodeAddress(query) {
                 const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1`;
                 const res = await fetch(url, {
@@ -687,15 +714,30 @@
 
              // Report a Problem submit
             document.querySelector('#report-submit').addEventListener('click', () => {
-                const trail = document.querySelector('#report-trail').value.trim();
-                const comment = document.querySelector('#report-comment').value.trim();
-                const problemType = document.querySelector('#report-pills .pill.active')?.textContent.trim() || 'General';
-                if (!trail) { alert('Please enter a trail name!'); return; }
-                if (!comment) { alert('Please describe the problem!'); return; }
-                document.querySelector('#report-form').style.display = 'none';
-                const thanks = document.querySelector('#report-thanks');
-                thanks.innerHTML = `✅ Report submitted!<br><span style="color:var(--white);font-size:13px;font-weight:400">${trail} — ${problemType}</span><br><span style="color:var(--muted);font-size:12px;font-weight:400">Thanks for helping keep the trails safe.</span>`;
-                thanks.style.display = 'block';
+                const trail_name  = document.querySelector('#report-trail').value.trim();
+                const maint_comment = document.querySelector('#report-comment').value.trim()
+                if (!trail_name)    { alert('Please enter a trail name!'); return; }
+                if (!isValidTrail(trail_name)) { alert('Please select a valid trail from the list.'); return; }
+                if (!maint_comment) { alert('Please describe the problem!'); return; }
+
+                fetch('/api/reports', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ trail_name, maint_comment })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        document.querySelector('#report-form').style.display = 'none';
+                        const thanks = document.querySelector('#report-thanks');
+                        thanks.innerHTML = `Report submitted! Thanks! :-)`;
+                        thanks.style.display = 'block';
+                    }
+                })
+                .catch(err => {
+                    console.error('Error submitting report:', err);
+                    alert('Something went wrong. Please try again :-( ');
+                });
             });
         </script>
 
@@ -821,6 +863,26 @@
                     });
                 });
             });
+
+            // FOR TRAIL NAMES 
+            let validTrailNames = []; 
+
+            fetch('/api/trails')
+                .then(res => res.json())
+                .then(trails => {
+                    validTrailNames = trails.map(t => t.name);
+                    const datalist = document.getElementById('trail-names-list');
+                    trails.forEach(trail => {
+                    const option = document.createElement('option');
+                    option.value = trail.name;
+                    datalist.appendChild(option);
+                    });
+                })
+                .catch(err => console.error('Error loading trail names:', err));
+
+            function isValidTrail(name) {
+            return validTrailNames.includes(name);
+            }
         </script>
 
 
@@ -1040,5 +1102,6 @@
 
     </body>
 </html>
+
 
 
