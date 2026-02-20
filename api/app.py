@@ -3,7 +3,7 @@ import psycopg2
 
 DB_NAME = "madeira_trails"   
 DB_USER = "postgres"         
-DB_PASSWORD = "6969"
+DB_PASSWORD = "postgres"
 DB_HOST = "localhost"
 DB_PORT = "5432"
 
@@ -150,3 +150,4 @@ def index():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
