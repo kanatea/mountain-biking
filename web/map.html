@@ -889,8 +889,11 @@
     <!-- MAP SCRIPT FROM HERE-->
         <script>
 
-                var map = L.map('map').setView([32.73, -17], 11.5);
-
+                var map = L.map('map', {
+                zoomSnap: 0,      // allow any fractional zoom
+                zoomDelta: 0.25   // optional: zoom in steps of 0.25
+            }).setView([32.75, -16.95], 11.7);
+            
             // Add this pane so the circle is drawn below your polylines
             map.createPane('radiusPane');
             map.getPane('radiusPane').style.zIndex = 350; // trails are in overlayPane (zIndex 400)
@@ -1102,6 +1105,7 @@
 
     </body>
 </html>
+
 
 
 
