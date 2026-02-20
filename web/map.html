@@ -573,34 +573,107 @@
             document.querySelector('#item-reviews .dropdown-section').appendChild(thanks);
             });
     // Near Me geolocation  cqmmy cqmmy CAMMY
-            document.querySelector('#nearme-submit').addEventListener('click', () => {
-                const manualLocation = document.querySelector('#nearme-location').value.trim();
-                if (manualLocation) {
-                    alert(`Searching trails near: ${manualLocation}`);
-                    return;
+            async function geocodeAddress(query) {
+                const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1`;
+                const res = await fetch(url, {
+                    headers: {
+                    'Accept': 'application/json'
+             // For a production app, you should send a proper User-Agent/Referer from your backend per Nominatim policy.
+                    }
+                });
+                const data = await res.json();
+                if (!data || !data.length) {
+                    return null;
                 }
-                if (!navigator.geolocation) {
-                    alert('Geolocation is not supported by your browser.'); return;
-                }  
+                return {
+                    lat: parseFloat(data[0].lat),
+                    lon: parseFloat(data[0].lon),
+                    displayName: data[0].display_name
+                };
+                }
+
+            document.querySelector('#nearme-submit').addEventListener('click', async () => {
+            const input = document.querySelector('#nearme-location');
+            const manualLocation = input ? input.value.trim() : '';
             const btn = document.querySelector('#nearme-submit');
+
+            // 1) If the user typed a location, geocode and filter trails
+            if (manualLocation) {
+                btn.textContent = '⏳ Searching…';
+                btn.disabled = true;
+
+                try {
+                const result = await geocodeAddress(manualLocation);
+                if (!result) {
+                    alert('Could not find that location. Try a more specific place name.');
+                } else {
+                    const lat = result.lat;
+                    const lon = result.lon;
+                    const radiusKm = 5; // adjust if you want a different default
+
+                    // Optional: show a marker and circle for the searched location
+                    L.marker([lat, lon], { title: result.displayName }).addTo(map);
+                    L.circle([lat, lon], {
+                    radius: radiusKm * 1000,
+                    color: 'green',
+                    fillOpacity: 0.1,
+                    interactive: false,
+                    pane: 'radiusPane'
+                    }).addTo(map);
+
+                    showTrailsNear(lat, lon, radiusKm);
+                }
+                } catch (e) {
+                console.error(e);
+                alert('There was a problem looking up that location.');
+                } finally {
+                btn.textContent = '📍 Use My Location';
+                btn.disabled = false;
+                }
+
+                return; // do not go on to geolocation
+            }
+
+            // 2) If the box is empty, use browser geolocation as you already do
+            if (!navigator.geolocation) {
+                alert('Geolocation is not supported by your browser.');
+                return;
+            }
+
             btn.textContent = '⏳ Locating…';
             btn.disabled = true;
+
             navigator.geolocation.getCurrentPosition(
                 pos => {
-                    btn.textContent = 'Location Found!';
-                    btn.style.background = 'var(--moss)';
-            // Here you'd pass pos.coords.latitude & pos.coords.longitude to your Leaflet map
+                btn.textContent = 'Location Found!';
+                btn.style.background = 'var(--moss)';
+
+                const lat = pos.coords.latitude;
+                const lon = pos.coords.longitude;
+                const radiusKm = 5;
+
+                L.marker([lat, lon], { title: 'You are here' }).addTo(map);
+                L.circle([lat, lon], {
+                    radius: radiusKm * 1000,
+                    color: 'green',
+                    fillOpacity: 0.1,
+                    interactive: false,
+                    pane: 'radiusPane'
+                }).addTo(map);
+
+                showTrailsNear(lat, lon, radiusKm);
+
                 setTimeout(() => {
                     btn.textContent = '📍 Use My Location';
                     btn.style.background = '';
                     btn.disabled = false;
                 }, 2500);
                 },
-            err => {
+                err => {
                 btn.textContent = '📍 Use My Location';
                 btn.disabled = false;
                 alert('Could not get your location. Try entering it manually.');
-            }
+                }
             );
             });
 
@@ -748,6 +821,10 @@
 
                 var map = L.map('map').setView([32.73, -17], 11.5);
 
+            // Add this pane so the circle is drawn below your polylines
+            map.createPane('radiusPane');
+            map.getPane('radiusPane').style.zIndex = 350; // trails are in overlayPane (zIndex 400)
+
                 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     maxZoom: 19,
                     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -757,6 +834,70 @@
                 // Store all trail layers for filtering/search
                 var trailLayers = [];
         
+                // Haversine distance in km between two lat/lon points
+                function distanceInKm(lat1, lon1, lat2, lon2) {
+                var R = 6371;
+                var dLat = (lat2 - lat1) * Math.PI / 180;
+                var dLon = (lon2 - lon1) * Math.PI / 180;
+                var a =
+                    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                    Math.cos(lat1 * Math.PI / 180) *
+                    Math.cos(lat2 * Math.PI / 180) *
+                    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+                var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                return R * c;
+                }
+
+                // Show only trails whose start point is within radiusKm of [lat, lon]
+                function showTrailsNear(lat, lon, radiusKm) {
+                var nearbyCount = 0;
+
+                trailLayers.forEach(obj => {
+                    var t = obj.trail;
+                    if (!t.start_lat || !t.start_lon) {
+                    if (map.hasLayer(obj.line)) map.removeLayer(obj.line);
+                    if (map.hasLayer(obj.marker)) map.removeLayer(obj.marker);
+                    return;
+                    }
+
+                    var d = distanceInKm(lat, lon, t.start_lat, t.start_lon);
+
+                    if (d <= radiusKm) {
+                    if (!map.hasLayer(obj.line)) obj.line.addTo(map);
+                    if (!map.hasLayer(obj.marker)) obj.marker.addTo(map);
+                    nearbyCount++;
+                    } else {
+                    if (map.hasLayer(obj.line)) map.removeLayer(obj.line);
+                    if (map.hasLayer(obj.marker)) map.removeLayer(obj.marker);
+                    }
+                });
+
+                if (nearbyCount > 0) {
+                    map.setView([lat, lon], 13);
+                } else {
+                    alert('No trails found within ' + radiusKm + ' km of that location.');
+                }
+                }
+
+                // Show all trails again
+                function showAllTrails() {
+                trailLayers.forEach(obj => {
+                    if (!map.hasLayer(obj.line)) obj.line.addTo(map);
+                    if (!map.hasLayer(obj.marker)) obj.marker.addTo(map);
+                });
+                }
+
+                // When the Near Me box is cleared, restore all trails
+                document.addEventListener('DOMContentLoaded', () => {
+                const nearMeInput = document.querySelector('#nearme-location');
+                if (nearMeInput) {
+                    nearMeInput.addEventListener('input', () => {
+                    if (!nearMeInput.value.trim()) {
+                        showAllTrails();
+                    }
+                    });
+                }
+                });
 
                  // Fetch trails from your API
                 fetch('/api/trails')
