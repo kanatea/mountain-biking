@@ -432,6 +432,7 @@
                     <div class="dropdown-section">
                         <div class="dropdown-label">Rating</div>
                         <div class="filter-pills" id="rating-pills">
+                            <button class="pill active">All</button> 
                             <button class="pill">★</button>
                             <button class="pill">★★</button>
                             <button class="pill">★★★</button>
@@ -452,7 +453,7 @@
                         <div class="dropdown-label">Leave a Review</div>
                     <div class="review-form">
                     <div class="review-trail-label">Username</div>
-                        <input type="text" class="review-trail-input" id="review-username" placeholder="e.g. TrailBlazer42" />
+                        <input type="text" class="review-trail-input" id="review-username" placeholder="e.g. Cammy4000" />
                         <div class="review-trail-label">Trail name</div>
                         <input type="text" class="review-trail-input" 
                             id="review-trail-input"
@@ -515,7 +516,7 @@
                             placeholder="Search for a trail…" 
                             autocomplete="off" />
                     <div class="review-trail-label">Description</div>
-                        <textarea class="review-textarea" id="report-comment" placeholder="Describe the problem — location on trail, severity, any other details…"></textarea>
+                        <textarea class="review-textarea" id="report-comment" placeholder="How was the trail? Please be nice and use nice words, we appreciate constructive criticism :-)"></textarea>
                         <button class="review-submit" id="report-submit">Submit Report</button>
                     </div>
                     <div class="review-thanks" id="report-thanks"></div>
@@ -795,7 +796,7 @@
                 return 'Unknown';
             }
 
-            
+            //filter for category
             function filterTrails(selectedCategory) {
                 const categoryMap = {
                     'All':              null,
@@ -820,6 +821,7 @@
                 });
             }
 
+            //filter for distance
             function filterDistance(selectedDistance) {
                 const distanceMap = {
                     'All':              null,
@@ -842,6 +844,7 @@
                 });
             }
 
+            //filter for elevation
             function filterElevation(selectedElevation) {
                 const elevationMap = {
                     'All':              null,
@@ -865,17 +868,44 @@
                 });
             }
 
+            //filter for trail rating
+            function filterByRating(selectedStar) {
+                const ratingMap = {
+                    'All':   null,
+                    '★':     1,
+                    '★★':    2,
+                    '★★★':   3,
+                    '★★★★':  4,
+                    '★★★★★': 5
+                };
+
+                const minRating = ratingMap[selectedStar];
+
+                trailLayers.forEach(obj => {
+                    const trailRating = ratingsMap[obj.trail.name]?.avg_rating ?? 0;
+                    const show = !minRating || trailRating >= minRating;
+                    if (show) {
+                        obj.line.addTo(map);
+                        obj.marker.addTo(map);
+                    } else {
+                        map.removeLayer(obj.line);
+                        map.removeLayer(obj.marker);
+                    }
+                });
+            }
+
             // Pill toggle
             document.querySelectorAll('.filter-pills').forEach(group => {
                 group.querySelectorAll('.pill').forEach(pill => {
                     pill.addEventListener('click', () => {
                         group.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
                         pill.classList.add('active');
-                        
                         if (group.id === 'distance-pills') {
                             filterDistance(pill.textContent.trim());
                         } else if (group.id === 'elevation-pills') {
                             filterElevation(pill.textContent.trim());
+                        } else if (group.id === 'rating-pills') { 
+                            filterByRating(pill.textContent.trim());
                         } else {
                             filterTrails(pill.textContent.trim());
                         }
@@ -902,6 +932,22 @@
             function isValidTrail(name) {
             return validTrailNames.includes(name);
             }
+
+            // FOR TRAIL RATINGS
+            let ratingsMap = {};
+
+            fetch('/api/trail_ratings')
+                .then(res => res.json())
+                .then(ratings => {
+                    // Build a lookup dictionary keyed by trail name
+                    ratings.forEach(t => {
+                        ratingsMap[t.trail_name] = {
+                            avg_rating:    t.avg_rating,
+                            total_reviews: t.total_reviews
+                        };
+                    });
+                })
+                .catch(err => console.error('Error loading ratings:', err));
         </script>
 
 
@@ -1097,6 +1143,11 @@
                         // Add a marker at start
                         var marker = L.circleMarker(start, { radius: 4, color: 'green' }).addTo(map);
 
+                        //store trail rating info for popup
+                        var trailRating = ratingsMap[trail.name];
+                        var ratingDisplay = trailRating
+                            ? `${trailRating.avg_rating} (${trailRating.total_reviews} review${trailRating.total_reviews !== 1 ? 's' : ''})`
+                            : 'No reviews yet';
                     
                     //POPUP INFORMATION
                         var popupContent = `
@@ -1104,6 +1155,8 @@
                             Distance: ${trail.distance_m} m<br />
                             Elevation gain: ${trail.elevation_gain_m} m<br />
                             Climb grade: ${trail.climb_category_desc} <br />
+                            Average Rating: ${ratingsMap[trail.name]?.avg_rating ?? 'No reviews yet'} stars
+                            (${ratingsMap[trail.name]?.total_reviews ?? 0} reviews)
                             `;
                         line.bindPopup(popupContent);
                         marker.bindPopup(popupContent);
@@ -1124,6 +1177,7 @@
 
     </body>
 </html>
+
 
 
 
