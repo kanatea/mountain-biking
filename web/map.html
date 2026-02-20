@@ -484,10 +484,17 @@
                 <div class="dropdown-section">
                     <div class="dropdown-label">Location</div>
                     <div class="review-form" style="padding: 4px 18px 12px; gap: 8px;">
-                    <input type="text" class="review-trail-input" id="nearme-location" placeholder="Enter region" />
-                    <button class="review-submit" id="nearme-submit">📍 Use My Location</button>
-                    <button class="review-submit" id="nearme-clear" style="background:#ccc;color:#2c1f0e;">Clear Near Me</button>
-                    </div>
+                <input type="text" class="review-trail-input" id="nearme-location" placeholder="Enter region" />
+
+                <select class="review-trail-input" id="nearme-radius">
+                    <option value="5" selected>Within 5 km</option>
+                    <option value="10">Within 10 km</option>
+                    <option value="20">Within 20 km</option>
+                </select>
+
+                <button class="review-submit" id="nearme-submit">📍 Use My Location</button>
+                <button class="review-submit" id="nearme-clear" style="background:#ccc;color:#2c1f0e;">Clear Near Me</button>
+                </div>
                 </div>
                 </div>
             </li>
@@ -602,30 +609,44 @@
             
             // Near Me geolocation 
             async function geocodeAddress(query) {
-                const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1`;
-                const res = await fetch(url, {
-                    headers: {
-                    'Accept': 'application/json'
-             // For a production app, you should send a proper User-Agent/Referer from your backend per Nominatim policy.
-                    }
-                });
-                const data = await res.json();
-                if (!data || !data.length) {
-                    return null;
+            const params = new URLSearchParams({
+                format: 'json',
+                q: query,
+                limit: '1',
+                viewbox: '-17.30,32.60,-16.70,32.86',
+                bounded: '1',
+                countrycodes: 'pt'
+            });
+
+            const url = `https://nominatim.openstreetmap.org/search?${params.toString()}`;
+
+            const res = await fetch(url, {
+                headers: {
+                'Accept': 'application/json'
+                // In production, set a proper User-Agent/Referer per Nominatim policy.
                 }
-                return {
-                    lat: parseFloat(data[0].lat),
-                    lon: parseFloat(data[0].lon),
-                    displayName: data[0].display_name
-                };
-                }
+            });
+            const data = await res.json();
+            if (!data || !data.length) {
+                return null;
+            }
+            return {
+                lat: parseFloat(data[0].lat),
+                lon: parseFloat(data[0].lon),
+                displayName: data[0].display_name
+            };
+            }
 
             document.querySelector('#nearme-submit').addEventListener('click', async () => {
             const input = document.querySelector('#nearme-location');
             const manualLocation = input ? input.value.trim() : '';
             const btn = document.querySelector('#nearme-submit');
 
-            // 1) If the user typed a location, geocode and filter trails
+             // NEW: read the selected radius
+            const radiusSelect = document.querySelector('#nearme-radius');
+            const radiusKm = radiusSelect ? parseFloat(radiusSelect.value) || 5 : 5;
+
+            // If the user typed a location, geocode and filter trails
             if (manualLocation) {
                 btn.textContent = '⏳ Searching…';
                 btn.disabled = true;
@@ -637,7 +658,6 @@
                 } else {
                     const lat = result.lat;
                     const lon = result.lon;
-                    const radiusKm = 5; // adjust if you want a different default
 
                     // Optional: show a marker and circle for the searched location
                     if (nearMeMarker) map.removeLayer(nearMeMarker);
@@ -681,7 +701,6 @@
 
                 const lat = pos.coords.latitude;
                 const lon = pos.coords.longitude;
-                const radiusKm = 5;
 
                 if (nearMeMarker) map.removeLayer(nearMeMarker);
                 if (nearMeCircle) map.removeLayer(nearMeCircle);
@@ -893,7 +912,7 @@
                 zoomSnap: 0,      // allow any fractional zoom
                 zoomDelta: 0.25   // optional: zoom in steps of 0.25
             }).setView([32.75, -16.95], 11.7);
-            
+
             // Add this pane so the circle is drawn below your polylines
             map.createPane('radiusPane');
             map.getPane('radiusPane').style.zIndex = 350; // trails are in overlayPane (zIndex 400)
@@ -1105,7 +1124,6 @@
 
     </body>
 </html>
-
 
 
 
