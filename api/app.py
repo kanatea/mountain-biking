@@ -1,9 +1,9 @@
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, render_template, request
 import psycopg2
 
 DB_NAME = "madeira_trails"   
 DB_USER = "postgres"         
-DB_PASSWORD = "postgres"
+DB_PASSWORD = "6969"
 DB_HOST = "localhost"
 DB_PORT = "5432"
 
@@ -19,6 +19,7 @@ def get_db_connection():
     )
     return conn
 
+## To read strava info from pgadmin to the website
 @app.get("/api/trails")
 def get_trails():
     conn = get_db_connection()
@@ -73,7 +74,7 @@ def get_trails():
             "distance_m": distance_m,
             "elevation_gain_m": elevation_gain_m,
             "avg_grade": float(avg_grade) if avg_grade is not None else None,
-            "climb_category_desc": climb_cat_desc
+            "climb_category_desc": climb_cat_desc,
             "start_lat": start_lat,
             "start_lon": start_lon,
             "end_lat": end_lat,
@@ -83,12 +84,69 @@ def get_trails():
 
     return jsonify(trails)
 
+## THIS IS THE POST-END, CONVERTING USER INPUT FROM WEBSITE BACK TO PGADMIN
+# For Reviews
+@app.route('/api/reviews', methods=['POST'])
+def submit_review():
+    data = request.get_json()
+    username   = data.get('username')
+    trail_name = data.get('trail_name')
+    rating     = data.get('rating')
+    comment    = data.get('comment')
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+    # Insert user if they don't exist yet
+    cur.execute(
+        "INSERT INTO pa.users (username) VALUES (%s) ON CONFLICT DO NOTHING",
+        (username,)
+    )
+    # Insert trail if it doesn't exist yet
+    cur.execute(
+        "INSERT INTO pa.trails (trail_name) VALUES (%s) ON CONFLICT DO NOTHING",
+        (trail_name,)
+    )
+    # Insert review
+    cur.execute(
+        """INSERT INTO pa.trail_ratings (trail_name, rating, username, comment)
+           VALUES (%s, %s, %s, %s)""",
+        (trail_name, rating, username, comment)
+    )
+
+    conn.commit()
+    cur.close()
+    conn.close()
+    return jsonify({'success': True}), 201
+
+## For Reports
+@app.route('/api/reports', methods=['POST'])
+def submit_report():
+    data = request.get_json()
+    trail_name   = data.get('trail_name')
+    maint_comment      = data.get('maint_comment')
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+     # Insert trail if it doesn't exist yet
+    cur.execute(
+        "INSERT INTO pa.trails (trail_name) VALUES (%s) ON CONFLICT DO NOTHING",
+        (trail_name,)
+    )
+    cur.execute(
+        """INSERT INTO pa.maintenance (trail_name, maint_comment)
+           VALUES (%s, %s)""",
+        (trail_name, maint_comment)
+    )
+    conn.commit()
+    cur.close()
+    conn.close()
+    return jsonify({'success': True}), 201
+
+
+## To read info from pgadmin to the website
 @app.get("/")
 def index():
     return render_template("map.html")
 
 if __name__ == "__main__":
-
     app.run(debug=True)
-
-
