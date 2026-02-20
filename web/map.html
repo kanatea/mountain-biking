@@ -136,6 +136,8 @@
             border: 1px solid rgba(168,200,64,0.25);
             border-top: 3px solid var(--lime);
             min-width: 220px;
+            max-width: 320px;
+            overflow: hidden;
             box-shadow: 0 12px 40px rgba(0,0,0,0.6);
             animation: dropIn 0.18s ease;
             z-index: 1001;
@@ -266,7 +268,7 @@
 
         /* Review form */
         .review-form {
-            padding: 4px 18px 12px;
+            padding: 4px 12px 12px;
             display: flex;
             flex-direction: column;
             gap: 8px;
@@ -278,8 +280,12 @@
             font-weight: 700;
             letter-spacing: 0.12em;
             text-transform: uppercase;
-            color: var(--muted);
+            color: var(--moss);
             margin-top: 4px;
+            display: block;       
+            width: 100%;           
+            box-sizing: border-box;
+            padding: 6px 0 4px;
         }
 
         .review-trail-input {
@@ -287,17 +293,19 @@
             border: 1px solid rgba(255,255,255,0.12);
             border-radius: 6px;
             padding: 8px 12px;
-            color: var(--white);
+            color: var(--moss);
             font-family: verdana, sans-serif;
             font-size: 13px;
             outline: none;
-            width: 100%;
+            display: block;       
+            width: 100%;           
+            box-sizing: border-box;
             transition: border-color 0.15s;
         }
         .review-trail-input:focus {
             border-color: var(--lime);
         }
-        .review-trail-input::placeholder { color: var(--muted); }
+        .review-trail-input::placeholder { color: var(--moss); }
 
          .star-rating {
             display: flex;
@@ -322,11 +330,12 @@
             border: 1px solid rgba(255,255,255,0.12);
             border-radius: 6px;
             padding: 10px 12px;
-            color: var(--white);
+            color: var(--moss);
             font-family: verdana, sans-serif;
             font-size: 13px;
             outline: none;
             width: 100%;
+            box-sizing: border-box;
             resize: vertical;
             min-height: 90px;
             transition: border-color 0.15s;
@@ -334,7 +343,7 @@
         .review-textarea:focus {
             border-color: var(--lime);
         }
-        .review-textarea::placeholder { color: var(--muted); }
+        .review-textarea::placeholder { color: var(--moss); }
 
         .review-submit {
             font-family: verdana, sans-serif;
@@ -390,8 +399,8 @@
                 </button>
                 <div class="dropdown" style="min-width:280px">
                     <div class="dropdown-section">
-                        <div class="dropdown-label">Difficulty</div>
-                        <div class="filter-pills">
+                        <div class="dropdown-label">Climb Category</div>
+                        <div class="filter-pills" id="category-pills">
                             <button class="pill active">All</button>
                             <button class="pill">Not Categorized</button>
                             <button class="pill">🟢 Category 4</button>
@@ -403,25 +412,31 @@
                     </div>
                     <div class="dropdown-section">
                         <div class="dropdown-label">Distance</div>
-                        <div class="filter-pills">
-                            <button class="pill">Under 5 km</button>
+                        <div class="filter-pills" id="distance-pills">
+                            <button class="pill active">All</button>
+                            <button class="pill">< 5 km</button>
                             <button class="pill">5–10 km</button>
                             <button class="pill">10+ km</button>
                         </div>
                     </div>
                     <div class="dropdown-section">
                         <div class="dropdown-label">Elevation Gain</div>
-                        <div class="filter-pills">
-                            <button class="pill">< 500 m</button>
-                            <button class="pill">500–1500 m</button>
-                            <button class="pill">1500+ m</button>
+                        <div class="filter-pills" id="elevation-pills">
+                            <button class="pill active">All</button>
+                            <button class="pill">< 100 m</button>
+                            <button class="pill">100–500 m</button>
+                            <button class="pill">500–1000 m</button>
+                            <button class="pill">1000+ m</button>
                         </div>
                     </div>
                     <div class="dropdown-section">
-                        <div class="dropdown-label">Top Trails</div>
-                        <div class="filter-pills">
-                            <button class="pill">Top Rated</button>
-                            <button class="pill">Most Rated</button>
+                        <div class="dropdown-label">Rating</div>
+                        <div class="filter-pills" id="rating-pills">
+                            <button class="pill">★</button>
+                            <button class="pill">★★</button>
+                            <button class="pill">★★★</button>
+                            <button class="pill">★★★★</button>
+                            <button class="pill">★★★★★</button>
                         </div>
                     </div>
                 </div>
@@ -437,16 +452,7 @@
                         <div class="dropdown-label">Submit a Report</div>
                     <div class="review-form" id="report-form">
                     <div class="review-trail-label">Trail Name</div>
-                        <input type="text" class="review-trail-input" id="report-trail" placeholder="e.g. Eagle Ridge Loop" />
-                        <div class="review-trail-label">Problem Type</div>
-                        <div class="filter-pills" id="report-pills">
-                            <button class="pill active">All</button>
-                            <button class="pill">Fallen Tree</button>
-                            <button class="pill">Trail Damage</button>
-                            <button class="pill">Safety Hazard</button>
-                            <button class="pill">Signage</button>
-                            <button class="pill">Other</button>
-                        </div>
+                        <input type="text" class="review-trail-input" id="report-trail" placeholder="Name of trail" />
                     <div class="review-trail-label">Description</div>
                         <textarea class="review-textarea" id="report-comment" placeholder="Describe the problem — location on trail, severity, any other details…"></textarea>
                         <button class="review-submit" id="report-submit">Submit Report</button>
@@ -465,7 +471,7 @@
                 <div class="dropdown-section">
                     <div class="dropdown-label">Location</div>
                     <div class="review-form" style="padding: 4px 18px 12px; gap: 8px;">
-                        <input type="text" class="review-trail-input" id="nearme-location" placeholder="Enter city or region" />
+                        <input type="text" class="review-trail-input" id="nearme-location" placeholder="Enter region" />
                         <button class="review-submit" id="nearme-submit">📍 Use My Location</button>
                     </div>
                 </div>
@@ -515,6 +521,7 @@
             </div>
         </div>
 
+        <!-- BEGIN NAV/UI SCRIPT -->
         <script>
             function toggleDropdown(id) {
                 const item = document.getElementById(id);
@@ -565,67 +572,36 @@
             thanks.style.display = 'block';
             document.querySelector('#item-reviews .dropdown-section').appendChild(thanks);
             });
-
-            // Near Me geolocation
-            document.addEventListener('DOMContentLoaded', () => {
-            const nearMeBtn = document.querySelector('#nearme-submit');
-            if (!nearMeBtn) return;
-
-            nearMeBtn.addEventListener('click', () => {
-                const manualLocationInput = document.querySelector('#nearme-location');
-                const manualLocation = manualLocationInput ? manualLocationInput.value.trim() : '';
-
+    // Near Me geolocation  cqmmy cqmmy CAMMY
+            document.querySelector('#nearme-submit').addEventListener('click', () => {
+                const manualLocation = document.querySelector('#nearme-location').value.trim();
                 if (manualLocation) {
-                alert(`Searching trails near: ${manualLocation}`);
-                return;
+                    alert(`Searching trails near: ${manualLocation}`);
+                    return;
                 }
-
                 if (!navigator.geolocation) {
-                alert('Geolocation is not supported by your browser.');
-                return;
-                }
-
-                const btn = nearMeBtn;
-                btn.textContent = '⏳ Locating…';
-                btn.disabled = true;
-
-                navigator.geolocation.getCurrentPosition(
+                    alert('Geolocation is not supported by your browser.'); return;
+                }  
+            const btn = document.querySelector('#nearme-submit');
+            btn.textContent = '⏳ Locating…';
+            btn.disabled = true;
+            navigator.geolocation.getCurrentPosition(
                 pos => {
                     btn.textContent = 'Location Found!';
                     btn.style.background = 'var(--moss)';
-
-                    const lat = pos.coords.latitude;
-                    const lon = pos.coords.longitude;
-                    const radiusKm = 5;
-
-                    // Show user's location on the map
-                    L.marker([lat, lon], { title: 'You are here' }).addTo(map);
-                    L.circle([lat, lon], {
-                    radius: radiusKm * 1000,
-                    color: 'green',
-                    fillOpacity: 0.1
-                    }).addTo(map);
-
-                    // Filter trails to those near the user
-                    if (typeof showTrailsNear === 'function') {
-                    showTrailsNear(lat, lon, radiusKm);
-                    } else {
-                    console.warn('showTrailsNear is not defined.');
-                    }
-
-                    setTimeout(() => {
+            // Here you'd pass pos.coords.latitude & pos.coords.longitude to your Leaflet map
+                setTimeout(() => {
                     btn.textContent = '📍 Use My Location';
                     btn.style.background = '';
                     btn.disabled = false;
-                    }, 2500);
+                }, 2500);
                 },
-                err => {
-                    btn.textContent = '📍 Use My Location';
-                    btn.disabled = false;
-                    alert('Could not get your location. Try entering it manually.');
-                }
-                );
-            });
+            err => {
+                btn.textContent = '📍 Use My Location';
+                btn.disabled = false;
+                alert('Could not get your location. Try entering it manually.');
+            }
+            );
             });
 
              // Report a Problem submit
@@ -640,35 +616,12 @@
                 thanks.innerHTML = `✅ Report submitted!<br><span style="color:var(--white);font-size:13px;font-weight:400">${trail} — ${problemType}</span><br><span style="color:var(--muted);font-size:12px;font-weight:400">Thanks for helping keep the trails safe.</span>`;
                 thanks.style.display = 'block';
             });
-
-            document.querySelectorAll('.filter-pills').forEach(group => {
-                group.querySelectorAll('.pill').forEach(pill => {
-                    pill.addEventListener('click', () => {
-                        group.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
-                        pill.classList.add('active');
-                    });
-                });
-            });
-
-            // Pill toggle
-            document.querySelectorAll('.filter-pills').forEach(group => {
-                group.querySelectorAll('.pill').forEach(pill => {
-                    pill.addEventListener('click', () => {
-                        group.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
-                        pill.classList.add('active');
-                        filterTrails(pill.textContent.trim());
-                    });
-                });
-            });
-
-
         </script>
 
 
-<!-- MAP STUFF FROM HERE-->
+    <!-- LEAFLET -->
         <div id="map"></div>
 
-        <!-- leaflet stuff i will cry-->
         <script 
             src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
@@ -678,8 +631,29 @@
         <!-- Plugin to decode encoded polylines -->
         <script src="https://cdn.jsdelivr.net/npm/polyline-encoded@0.0.9/Polyline.encoded.js"></script>
 
+
+        <!-- BEGIN PILL SCRIPTS -->
         <script>
             // Pill categories
+
+            //Code trail distance
+            function getTrailDistance(distance) {
+                if (distance < 5000) return '< 5 km';
+                if (distance >= 5000 && distance < 10000) return '5–10 km';
+                if (distance >= 10000) return '10+ km';
+                return 'Unknown';
+            }
+
+            //Code trail elevation gain
+            function getTrailElevation(elevation) {
+                if (elevation < 100) return '< 100 m';
+                if (elevation >= 100 && elevation < 500) return '100–500 m';
+                if (elevation >= 500 && elevation < 1000) return '500–1000 m';
+                if (elevation >= 1000) return '1000+ m';
+                return 'Unknown';
+            }
+
+            
             function filterTrails(selectedCategory) {
                 const categoryMap = {
                     'All':              null,
@@ -703,8 +677,73 @@
                     }
                 });
             }
+
+            function filterDistance(selectedDistance) {
+                const distanceMap = {
+                    'All':              null,
+                    '< 5 km':      '< 5 km',
+                    '5–10 km':         '5–10 km',
+                    '10+ km':          '10+ km'
+                };
+
+                trailLayers.forEach(obj => {
+                    const category = getTrailDistance(obj.trail.distance_m)
+                    const mapped = distanceMap[selectedDistance];
+                    const show = !mapped || category === mapped;
+                    if (show) {
+                    obj.line.addTo(map);
+                    obj.marker.addTo(map);
+                    } else {
+                    map.removeLayer(obj.line);
+                    map.removeLayer(obj.marker);
+                    }
+                });
+            }
+
+            function filterElevation(selectedElevation) {
+                const elevationMap = {
+                    'All':              null,
+                    '< 100 m':            '< 100 m',
+                    '100–500 m':         '100–500 m',
+                    '500–1000 m':         '500–1000 m',
+                    '1000+ m':          '1000+ m'
+                };
+
+                trailLayers.forEach(obj => {
+                    const category = getTrailElevation(obj.trail.elevation_gain_m)
+                    const mapped = elevationMap[selectedElevation];
+                    const show = !mapped || category === mapped;
+                    if (show) {
+                    obj.line.addTo(map);
+                    obj.marker.addTo(map);
+                    } else {
+                    map.removeLayer(obj.line);
+                    map.removeLayer(obj.marker);
+                    }
+                });
+            }
+
+            // Pill toggle
+            document.querySelectorAll('.filter-pills').forEach(group => {
+                group.querySelectorAll('.pill').forEach(pill => {
+                    pill.addEventListener('click', () => {
+                        group.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+                        pill.classList.add('active');
+                        
+                        if (group.id === 'distance-pills') {
+                            filterDistance(pill.textContent.trim());
+                        } else if (group.id === 'elevation-pills') {
+                            filterElevation(pill.textContent.trim());
+                        } else {
+                            filterTrails(pill.textContent.trim());
+                        }
+                    });
+                });
+            });
         </script>
-        
+
+
+    <!-- MAP SCRIPT FROM HERE-->
         <script>
 
                 var map = L.map('map').setView([32.73, -17], 11.5);
@@ -717,7 +756,7 @@
 
                 // Store all trail layers for filtering/search
                 var trailLayers = [];
-
+        
 
                  // Fetch trails from your API
                 fetch('/api/trails')
@@ -729,6 +768,7 @@
                         var end = [trail.end_lat, trail.end_lon];
 
                         let line;
+                    
 
                     // Search box functions    
                         function filterTrailsByName(query) {
@@ -755,7 +795,7 @@
                             }
                             }
                         });    
-                    }
+                        }
 
                     // Hook up the search box to the filter
                         var searchInput = document.getElementById('searchInput');
@@ -768,13 +808,14 @@
                         //Color code trails
                         function getClimbColor(category) {
                             if (category == "Not Categorized") return 'gray';
-                            if (category == "Category 4")  return '#64AD07'; // green  — easy
-                            if (category == "Category 3")  return '#4a90d9'; // blue   — moderate
-                            if (category == "Category 2")  return 'red';//red
-                            if (category == "Category 1")  return '#4a90d9'; // black  — hard
-                            if (category == "Hors Catégorie")  return 'orange'; // orange — very steep
+                            if (category == "Category 4")  return '#2F9400'; // green  — easy
+                            if (category == "Category 3")  return '#498FC4'; // blue   — moderate
+                            if (category == "Category 2")  return '#C44949';//red
+                            if (category == "Category 1")  return 'black'; // black  — hard
+                            if (category == "Hors Catégorie")  return '#C48449'; // orange — very steep
                             return 'gray';
-                         }
+                            }
+
 
                         // If we have a polyline, use the full shape
                         if (trail.polyline) {
@@ -793,6 +834,8 @@
                         // Add a marker at start
                         var marker = L.circleMarker(start, { radius: 4, color: 'green' }).addTo(map);
 
+                    
+                    //POPUP INFORMATION
                         var popupContent = `
                             <strong>${trail.name}</strong><br />
                             Distance: ${trail.distance_m} m<br />
@@ -802,68 +845,21 @@
                         line.bindPopup(popupContent);
                         marker.bindPopup(popupContent);
 
-                         // Save layers for search/filtering
+                         // Save for search/filtering
                         trailLayers.push({
                         trail: trail,
                         line: line,
                         marker: marker
                         });
                         }
-
-                        // function to compute distance (Haversine)
-                        function distanceInKm(lat1, lon1, lat2, lon2) {
-                        var R = 6371;
-                        var dLat = (lat2 - lat1) * Math.PI / 180;
-                        var dLon = (lon2 - lon1) * Math.PI / 180;
-                        var a =
-                            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                            Math.cos(lat1 * Math.PI / 180) *
-                            Math.cos(lat2 * Math.PI / 180) *
-                            Math.sin(dLon / 2) * Math.sin(dLon / 2);
-                        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-                        return R * c;
-                        }
                     });
-
-                    // "Near me" filter function
-                    function showTrailsNear(lat, lon, radiusKm) {
-                    var nearbyCount = 0;
-
-                    trailLayers.forEach(obj => {
-                        var t = obj.trail;
-                        if (!t.start_lat || !t.start_lon) {
-                        if (map.hasLayer(obj.line)) map.removeLayer(obj.line);
-                        if (map.hasLayer(obj.marker)) map.removeLayer(obj.marker);
-                        return;
-                        }
-
-                          var d = distanceInKm(lat, lon, t.start_lat, t.start_lon);
-
-                          if (d <= radiusKm) {
-                            if (!map.hasLayer(obj.line)) obj.line.addTo(map);
-                            if (!map.hasLayer(obj.marker)) obj.marker.addTo(map);
-                            nearbyCount++;
-                            } else {
-                            if (map.hasLayer(obj.line)) map.removeLayer(obj.line);
-                            if (map.hasLayer(obj.marker)) map.removeLayer(obj.marker);
-                            }
-                    });
-
-                     if (nearbyCount > 0) {
-                        map.setView([lat, lon], 13);
-                    } else {
-                        alert('No trails found within ' + radiusKm + ' km of your location.');
-                    }
-                    }
                     })
                     .catch(err => {
                     console.error('Error loading trails:', err);
-                    });
+                });
         </script>
 
     </body>
 </html>
-
-
 
 
