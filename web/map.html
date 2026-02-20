@@ -471,8 +471,9 @@
                 <div class="dropdown-section">
                     <div class="dropdown-label">Location</div>
                     <div class="review-form" style="padding: 4px 18px 12px; gap: 8px;">
-                        <input type="text" class="review-trail-input" id="nearme-location" placeholder="Enter region" />
-                        <button class="review-submit" id="nearme-submit">📍 Use My Location</button>
+                    <input type="text" class="review-trail-input" id="nearme-location" placeholder="Enter region" />
+                    <button class="review-submit" id="nearme-submit">📍 Use My Location</button>
+                    <button class="review-submit" id="nearme-clear" style="background:#ccc;color:#2c1f0e;">Clear Near Me</button>
                     </div>
                 </div>
                 </div>
@@ -612,8 +613,11 @@
                     const radiusKm = 5; // adjust if you want a different default
 
                     // Optional: show a marker and circle for the searched location
-                    L.marker([lat, lon], { title: result.displayName }).addTo(map);
-                    L.circle([lat, lon], {
+                    if (nearMeMarker) map.removeLayer(nearMeMarker);
+                    if (nearMeCircle) map.removeLayer(nearMeCircle);
+
+                    nearMeMarker = L.marker([lat, lon], { title: result.displayName }).addTo(map);
+                    nearMeCircle = L.circle([lat, lon], {
                     radius: radiusKm * 1000,
                     color: 'green',
                     fillOpacity: 0.1,
@@ -652,16 +656,20 @@
                 const lon = pos.coords.longitude;
                 const radiusKm = 5;
 
-                L.marker([lat, lon], { title: 'You are here' }).addTo(map);
-                L.circle([lat, lon], {
-                    radius: radiusKm * 1000,
-                    color: 'green',
-                    fillOpacity: 0.1,
-                    interactive: false,
-                    pane: 'radiusPane'
+                if (nearMeMarker) map.removeLayer(nearMeMarker);
+                if (nearMeCircle) map.removeLayer(nearMeCircle);
+
+                nearMeMarker = L.marker([lat, lon], { title: 'You are here' }).addTo(map);
+                nearMeCircle = L.circle([lat, lon], {
+                radius: radiusKm * 1000,
+                color: 'green',
+                fillOpacity: 0.1,
+                interactive: false,
+                pane: 'radiusPane'
                 }).addTo(map);
 
                 showTrailsNear(lat, lon, radiusKm);
+                ;
 
                 setTimeout(() => {
                     btn.textContent = '📍 Use My Location';
@@ -825,6 +833,10 @@
             map.createPane('radiusPane');
             map.getPane('radiusPane').style.zIndex = 350; // trails are in overlayPane (zIndex 400)
 
+            // Keep references to the last Near Me marker/circle
+                var nearMeMarker = null;
+                var nearMeCircle = null;
+
                 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     maxZoom: 19,
                     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -879,6 +891,13 @@
                 }
                 }
 
+                function showAllTrails() {
+                trailLayers.forEach(obj => {
+                    if (!map.hasLayer(obj.line)) obj.line.addTo(map);
+                    if (!map.hasLayer(obj.marker)) obj.marker.addTo(map);
+                });
+                }
+
                 // Show all trails again
                 function showAllTrails() {
                 trailLayers.forEach(obj => {
@@ -895,6 +914,25 @@
                     if (!nearMeInput.value.trim()) {
                         showAllTrails();
                     }
+                    });
+                }
+                });
+
+                document.addEventListener('DOMContentLoaded', () => {
+                const clearBtn = document.querySelector('#nearme-clear');
+                const input = document.querySelector('#nearme-location');
+                if (clearBtn) {
+                    clearBtn.addEventListener('click', () => {
+                    if (nearMeMarker) {
+                        map.removeLayer(nearMeMarker);
+                        nearMeMarker = null;
+                    }
+                    if (nearMeCircle) {
+                        map.removeLayer(nearMeCircle);
+                        nearMeCircle = null;
+                    }
+                    if (input) input.value = '';
+                    showAllTrails();
                     });
                 }
                 });
