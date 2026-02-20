@@ -1155,7 +1155,7 @@
                             Distance: ${trail.distance_m} m<br />
                             Elevation gain: ${trail.elevation_gain_m} m<br />
                             Climb grade: ${trail.climb_category_desc} <br />
-                            Average Rating: ${ratingsMap[trail.name]?.avg_rating ?? 'No reviews yet'} stars
+                            Average Rating: ${ratingsMap[trail.name]?.avg_rating ?? 'No reviews yet'}★
                             (${ratingsMap[trail.name]?.total_reviews ?? 0} reviews)
                             `;
                         line.bindPopup(popupContent);
@@ -1177,6 +1177,7 @@
 
     </body>
 </html>
+
 
 
 
