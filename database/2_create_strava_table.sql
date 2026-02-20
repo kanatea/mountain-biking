@@ -4,7 +4,6 @@ CREATE TABLE IF NOT EXISTS strava.trails(
     id               SERIAL PRIMARY KEY,
     strava_segment_id BIGINT UNIQUE,
     name             varchar(255) NOT NULL,
-    -- can we make this the primary key
     region           TEXT DEFAULT 'Madeira',
     distance_m       INTEGER,
     elevation_gain_m INTEGER,
@@ -18,6 +17,7 @@ CREATE TABLE IF NOT EXISTS strava.trails(
     climb_category_desc TEXT,
     polyline         TEXT
 );
+
 
 
 
