@@ -1,9 +1,11 @@
-from flask import Flask, jsonify, render_template, request
-import psycopg2
+##This script runs the API connections
 
-DB_NAME = "madeira_trails"   
-DB_USER = "postgres"         
-DB_PASSWORD = "postgres"
+#from flask import Flask, jsonify, render_template, request
+#import psycopg2
+
+DB_NAME = "madeira_trails"    #replace with your database name
+DB_USER = "postgres"          #replace with your username         
+DB_PASSWORD = "postgres"      #replace with your password
 DB_HOST = "localhost"
 DB_PORT = "5432"
 
@@ -84,8 +86,8 @@ def get_trails():
 
     return jsonify(trails)
 
-## THIS IS THE POST-END, CONVERTING USER INPUT FROM WEBSITE BACK TO PGADMIN
-# For Reviews
+## These are the api connections for the post-end, converts data from users on the front-end back to pg admin
+# For user reviews
 @app.route('/api/reviews', methods=['POST'])
 def submit_review():
     data = request.get_json()
@@ -118,7 +120,7 @@ def submit_review():
     conn.close()
     return jsonify({'success': True}), 201
 
-## For Reports
+## For user maintenance reports 
 @app.route('/api/reports', methods=['POST'])
 def submit_report():
     data = request.get_json()
@@ -142,7 +144,8 @@ def submit_report():
     conn.close()
     return jsonify({'success': True}), 201
 
-# For ratings
+# For ratings - This takes the stored user rating data on pg admin and aggregates it 
+# to return average rating per trail to display on the front end website
 @app.get("/api/trail_ratings")
 def get_trail_ratings():
     conn = get_db_connection()
@@ -172,12 +175,13 @@ def get_trail_ratings():
     return jsonify(ratings)
 
 
-## To read info from pgadmin to the website
+## To read the html file that establishes the front-end
 @app.get("/")
 def index():
     return render_template("map.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 
