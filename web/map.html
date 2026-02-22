@@ -11,13 +11,11 @@
     <style>
 
         /* Map from OSM */
+        /* Map from OSM */
         #map { 
         height: calc(100vh - 59px);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 12px;
+        width: 100%;
+        display: block;
         z-index: 0;
         }
 
@@ -381,6 +379,7 @@
 
     <body>
         <!-- wtf-->
+         <nav>
         <div class="nav-inner">
 
             <!-- Title -->
@@ -432,7 +431,6 @@
                     <div class="dropdown-section">
                         <div class="dropdown-label">Rating</div>
                         <div class="filter-pills" id="rating-pills">
-                            <button class="pill active">All</button> 
                             <button class="pill">★</button>
                             <button class="pill">★★</button>
                             <button class="pill">★★★</button>
@@ -453,7 +451,7 @@
                         <div class="dropdown-label">Leave a Review</div>
                     <div class="review-form">
                     <div class="review-trail-label">Username</div>
-                        <input type="text" class="review-trail-input" id="review-username" placeholder="e.g. Cammy4000" />
+                        <input type="text" class="review-trail-input" id="review-username" placeholder="e.g. TrailBlazer42" />
                         <div class="review-trail-label">Trail name</div>
                         <input type="text" class="review-trail-input" 
                             id="review-trail-input"
@@ -516,7 +514,7 @@
                             placeholder="Search for a trail…" 
                             autocomplete="off" />
                     <div class="review-trail-label">Description</div>
-                        <textarea class="review-textarea" id="report-comment" placeholder="How was the trail? Please be nice and use nice words, we appreciate constructive criticism :-)"></textarea>
+                        <textarea class="review-textarea" id="report-comment" placeholder="Describe the problem — location on trail, severity, any other details…"></textarea>
                         <button class="review-submit" id="report-submit">Submit Report</button>
                     </div>
                     <div class="review-thanks" id="report-thanks"></div>
@@ -531,11 +529,20 @@
                      <input
                         type="text"
                         id="searchInput"
+                        list="trail-names-list"
                         placeholder="Search trails…"
+                        autocomplete="off"
                     />
-                </div>
-            </div>
-        </div>
+                      <button
+                        type="button"
+                        id="searchClear"
+                        style="border:none;background:transparent;color:var(--moss);cursor:pointer;font-size:13px;margin-left:4px;"
+                        title="Clear search"
+                        >
+                        ✕
+                        </button>
+                     </div>
+                 </div>
     
     <!-- for autopopulating trail name search bar -->
         <datalist id="trail-names-list">
@@ -686,7 +693,7 @@
                 return; // do not go on to geolocation
             }
 
-            // 2) If the box is empty, use browser geolocation as you already do
+            // 2) If the box is empty, use browser geolocation
             if (!navigator.geolocation) {
                 alert('Geolocation is not supported by your browser.');
                 return;
@@ -760,7 +767,7 @@
                 });
             });
         </script>
-
+         </nav>
 
     <!-- LEAFLET -->
         <div id="map"></div>
@@ -796,7 +803,7 @@
                 return 'Unknown';
             }
 
-            //filter for category
+            
             function filterTrails(selectedCategory) {
                 const categoryMap = {
                     'All':              null,
@@ -821,7 +828,6 @@
                 });
             }
 
-            //filter for distance
             function filterDistance(selectedDistance) {
                 const distanceMap = {
                     'All':              null,
@@ -844,7 +850,6 @@
                 });
             }
 
-            //filter for elevation
             function filterElevation(selectedElevation) {
                 const elevationMap = {
                     'All':              null,
@@ -868,44 +873,17 @@
                 });
             }
 
-            //filter for trail rating
-            function filterByRating(selectedStar) {
-                const ratingMap = {
-                    'All':   null,
-                    '★':     1,
-                    '★★':    2,
-                    '★★★':   3,
-                    '★★★★':  4,
-                    '★★★★★': 5
-                };
-
-                const minRating = ratingMap[selectedStar];
-
-                trailLayers.forEach(obj => {
-                    const trailRating = ratingsMap[obj.trail.name]?.avg_rating ?? 0;
-                    const show = !minRating || trailRating >= minRating;
-                    if (show) {
-                        obj.line.addTo(map);
-                        obj.marker.addTo(map);
-                    } else {
-                        map.removeLayer(obj.line);
-                        map.removeLayer(obj.marker);
-                    }
-                });
-            }
-
             // Pill toggle
             document.querySelectorAll('.filter-pills').forEach(group => {
                 group.querySelectorAll('.pill').forEach(pill => {
                     pill.addEventListener('click', () => {
                         group.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
                         pill.classList.add('active');
+                        
                         if (group.id === 'distance-pills') {
                             filterDistance(pill.textContent.trim());
                         } else if (group.id === 'elevation-pills') {
                             filterElevation(pill.textContent.trim());
-                        } else if (group.id === 'rating-pills') { 
-                            filterByRating(pill.textContent.trim());
                         } else {
                             filterTrails(pill.textContent.trim());
                         }
@@ -932,22 +910,6 @@
             function isValidTrail(name) {
             return validTrailNames.includes(name);
             }
-
-            // FOR TRAIL RATINGS
-            let ratingsMap = {};
-
-            fetch('/api/trail_ratings')
-                .then(res => res.json())
-                .then(ratings => {
-                    // Build a lookup dictionary keyed by trail name
-                    ratings.forEach(t => {
-                        ratingsMap[t.trail_name] = {
-                            avg_rating:    t.avg_rating,
-                            total_reviews: t.total_reviews
-                        };
-                    });
-                })
-                .catch(err => console.error('Error loading ratings:', err));
         </script>
 
 
@@ -1028,14 +990,6 @@
                 });
                 }
 
-                // Show all trails again
-                function showAllTrails() {
-                trailLayers.forEach(obj => {
-                    if (!map.hasLayer(obj.line)) obj.line.addTo(map);
-                    if (!map.hasLayer(obj.marker)) obj.marker.addTo(map);
-                });
-                }
-
                 // When the Near Me box is cleared, restore all trails
                 document.addEventListener('DOMContentLoaded', () => {
                 const nearMeInput = document.querySelector('#nearme-location');
@@ -1077,7 +1031,6 @@
                         var end = [trail.end_lat, trail.end_lon];
 
                         let line;
-                    
 
                     // Search box functions    
                         function filterTrailsByName(query) {
@@ -1088,31 +1041,65 @@
 
                             if (!q || name.includes(q)) {
                             // Show matching (or all, if query empty)
-                            if (!map.hasLayer(obj.line)) {
-                                obj.line.addTo(map);
-                            }
-                            if (!map.hasLayer(obj.marker)) {
-                                obj.marker.addTo(map);
-                            }
-                            } else {
+                            if (!map.hasLayer(obj.line)) obj.line.addTo(map);
+                            if (!map.hasLayer(obj.marker)) obj.marker.addTo(map);
+                        } else {
                             // Hide non-matching
-                            if (map.hasLayer(obj.line)) {
-                                map.removeLayer(obj.line);
+                            if (map.hasLayer(obj.line)) map.removeLayer(obj.line);
+                            if (map.hasLayer(obj.marker)) map.removeLayer(obj.marker);
                             }
-                            if (map.hasLayer(obj.marker)) {
-                                map.removeLayer(obj.marker);
-                            }
-                            }
-                        });    
+                        });
                         }
 
                     // Hook up the search box to the filter
                         var searchInput = document.getElementById('searchInput');
+                        var searchClear = document.getElementById('searchClear');
+
                         if (searchInput) {
+                    // Live filter while typing        
                         searchInput.addEventListener('input', function () {
                             filterTrailsByName(this.value);
                         });
+                    // Enforce valid trail name on blur
+                    searchInput.addEventListener('blur', function () {
+                        const val = this.value.trim();
+                        if (!val) {
+                        // Empty -> show all trails
+                        filterTrailsByName('');
+                        return;
                         }
+                        if (!isValidTrail(val)) {
+                        alert('Please select a valid trail from the list.');
+                        this.value = '';
+                        filterTrailsByName('');
+                        }
+                    });        
+
+                    //Also enforce validity on Enter key
+                    searchInput.addEventListener('keydown', function (e){
+                        if (e.key === 'Enter') {
+                            const val = this.value.trim();
+                            if (!val) {
+                                filterTrailsByName('');
+                                return;
+                            }
+                            if (!isValidTrail(val)) {
+                                e.preventDefault();
+                                alert('Please select a valid trail from the list.');
+                                this.value = '';
+                                filterTrailsByName('');
+                            }
+                           }
+                         });
+                        }   
+
+                        if (searchClear && searchInput) {
+                        searchClear.addEventListener('click', () => {
+                            searchInput.value = '';
+                            filterTrailsByName('');   // show all trails again
+                            searchInput.focus();
+                        });
+                        }    
 
                         //Color code trails
                         function getClimbColor(category) {
@@ -1143,11 +1130,6 @@
                         // Add a marker at start
                         var marker = L.circleMarker(start, { radius: 4, color: 'green' }).addTo(map);
 
-                        //store trail rating info for popup
-                        var trailRating = ratingsMap[trail.name];
-                        var ratingDisplay = trailRating
-                            ? `${trailRating.avg_rating} (${trailRating.total_reviews} review${trailRating.total_reviews !== 1 ? 's' : ''})`
-                            : 'No reviews yet';
                     
                     //POPUP INFORMATION
                         var popupContent = `
@@ -1155,8 +1137,6 @@
                             Distance: ${trail.distance_m} m<br />
                             Elevation gain: ${trail.elevation_gain_m} m<br />
                             Climb grade: ${trail.climb_category_desc} <br />
-                            Average Rating: ${ratingsMap[trail.name]?.avg_rating ?? 'No reviews yet'}★
-                            (${ratingsMap[trail.name]?.total_reviews ?? 0} reviews)
                             `;
                         line.bindPopup(popupContent);
                         marker.bindPopup(popupContent);
@@ -1177,8 +1157,6 @@
 
     </body>
 </html>
-
-
 
 
 
