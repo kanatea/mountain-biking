@@ -7,11 +7,14 @@ This project aims to create a tool that catalogues, visualizes, and provides mou
 Group members: Cameron Chalmers & Kana Tateishi
 
 ## Setup and Execution
+**Strava API Key Setup and Activation**
+Run the refresh_access_token script in the strava_api folder to get the new access_token value. 
+Plug the new access token value in the designated place in the test_strava_api script in the strava_api folder and load_segments_to_db in the etl folder.
+Run test_strava_api to make sure you have an active connection to the Strava API.
 **Database Setup**
-**Environment Setup**
 **ETL Process**
-**API Key Setup** Open _`key.py`_ with the API key.
 **API Activation**
+**Environment Setup**
 
 ## Database
 PostgreSQL and PostGIS are used for spatial data storage and analysis.
