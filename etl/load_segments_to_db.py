@@ -1,5 +1,6 @@
 ##This script loads the data from strava onto our database on pg admin. Since each request only allows for 10 "segments" or bike trails,
 ##we broke the area of inquiry up into tiles to maximize the number of trails we can import across madeira.
+##Run the update_polylines script after this to add polyline data
 
 #import requests
 #import psycopg2
@@ -228,4 +229,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
