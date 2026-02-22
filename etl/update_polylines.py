@@ -1,0 +1,1 @@
+from load_segments_to_db import update_polylines; update_polylines()
