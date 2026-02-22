@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS pa.maintenance (
 	id               SERIAL PRIMARY KEY,
     trail_name      varchar(255) NOT NULL REFERENCES pa.trails(trail_name),
 	maint_comment	 varchar,
-	was_resolved     INTEGER (BETWEEN 0 AND 1),
 	created_at       TIMESTAMP DEFAULT NOW()
 );
+
 
