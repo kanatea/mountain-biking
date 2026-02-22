@@ -9,10 +9,10 @@ Group members: Cameron Chalmers & Kana Tateishi
 ## Setup and Execution
 **Strava API Key Setup and Activation**
 
-1. Read requirements.txt file into your Python environment
-2. Run the refresh_access_token script in the strava_api folder to get the new access_token value. 
+1. Read requirements.txt file into your Python environment. 
+2. Run the refresh_access_token script in the strava_api folder on VScode to get the new access_token value. 
 3. Plug the new access token value in the designated place in the test_strava_api script in the strava_api folder and load_segments_to_db in the etl folder.
-4. Run test_strava_api to make sure you have an active connection to the Strava API.
+4. Run test_strava_api on VScode to make sure you have an active connection to the Strava API.
 
 **Database Setup**
 
@@ -20,13 +20,14 @@ Group members: Cameron Chalmers & Kana Tateishi
 
 **ETL Process**
 
-6. Run the test_db_connection script to test the database connection.
-7. Run load_segments_to_db.py to load Strava trail data into pg admin.
-8. Run update_polylines.py to load trail polyline geometry for our trail data on pg admin.
+6. Run the test_db_connection script in VScode to test the database connection.
+7. Run load_segments_to_db on VScode to load Strava trail data into pg admin.
+8. Run update_polylines to load trail polyline geometry for our trail data on pg admin.
 
 **API Activation**
 
-9. Run app.py
+9. Run app.py on VScode to connect the database to the website, which is contained in the templates folder as map.html. 
+10. Click on the link that appears in your console upon running app.py and it should open the html file. 
 
 **Environment Setup**
 
