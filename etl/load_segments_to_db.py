@@ -1,14 +1,17 @@
-import requests
-import psycopg2
-import time
+##This script loads the data from strava onto our database on pg admin. Since each request only allows for 10 "segments" or bike trails,
+##we broke the area of inquiry up into tiles to maximize the number of trails we can import across madeira.
+
+#import requests
+#import psycopg2
+#import time
 
 # Database credentials
 
-ACCESS_TOKEN = "95ece59d960098fe62ecbff2c03f4e211150f700"
+ACCESS_TOKEN = "95ece59d960098fe62ecbff2c03f4e211150f700"  #update this with the refresh access token obtained from the script refresh_access_token in the strava api folder
 
-DB_NAME = "madeira_trails"   
-DB_USER = "postgres"         
-DB_PASSWORD = "postgres"
+DB_NAME = "madeira_trails"   #update this with your database name
+DB_USER = "postgres"         #update this with your username
+DB_PASSWORD = "postgres"     #update this with your password
 DB_HOST = "localhost"
 DB_PORT = "5432"
 
@@ -225,3 +228,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
