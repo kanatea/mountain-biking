@@ -7,13 +7,13 @@ This project aims to create a tool that catalogues, visualizes, and provides mou
 Group members: Cameron Chalmers & Kana Tateishi
 
 **Key Features**
-    - Interactive map: Clickable and adjustable map view. 
-    - Quick and easy overview: Once clicked, a popup offers a quick overview of technical trail information, as well as user ratings and any recently reported issues on a given trail.
-    - Trails can be filtered by climb category, distance, elevation gain, and star rating.
-    - Users are able to submit reviews and ratings on trails.
-    - Users can search for trails based on their location or specific cities within Madeira, with adjustable distance ranges.
-    - Users are able to report issues or maintenance requests on trails. 
-    - Users can utilize the search bar to look up trails by name.
+- Interactive map: Clickable and adjustable map view. 
+- Quick and easy overview: Once clicked, a popup offers a quick overview of technical trail information, as well as user ratings and any recently reported issues on a given trail.
+- Trails can be filtered by climb category, distance, elevation gain, and star rating.
+- Users are able to submit reviews and ratings on trails.
+- Users can search for trails based on their location or specific cities within Madeira, with adjustable distance ranges.
+- Users are able to report issues or maintenance requests on trails. 
+- Users can utilize the search bar to look up trails by name.
 
 ## Setup and Execution
 
