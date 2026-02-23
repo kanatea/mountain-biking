@@ -51,7 +51,7 @@ This project aims to create a tool that catalogues, visualizes, and provides mou
 
 
 ## Database
-PostgreSQL and PostGIS are used for spatial data storage and analysis.
+pgAdmin are used for spatial data storage and analysis.
 
 **Tables**
 - `strava.trails` - Stores trail information (trail name, distance, elevation gain, trail grade, start and end point, climb category, polylines/trail geometry)
@@ -93,6 +93,7 @@ Database integration:
     - psycopg2 
 - flask
     - flask, jsonify, render_template, request
+
 
 
 
