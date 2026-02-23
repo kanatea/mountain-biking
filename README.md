@@ -1,10 +1,10 @@
 # MtB Madeira
 *Helping visitors discover Madeira through mountain biking*
 
-## Overview
+## Overview (｡•̀ᴗ-)✧
 This project aims to create a tool that catalogues, visualizes, and provides mountain bike trail information in Madeira to bikers by integrating spatial analytics and user insights and feedback within a database.
 
-**Group members:** Cameron Chalmers & Kana Tateishi (●＾o＾●)
+**Group members:** Cameron Chalmers & Kana Tateishi (￣▽￣)ノ
 
 ### Key Features (◕‿◕✿)
 - **Interactive map:** Clickable and adjustable map view. 
@@ -17,9 +17,10 @@ This project aims to create a tool that catalogues, visualizes, and provides mou
 
 ## Setup and Execution
 
-**Environment Setup**
+**Environment Setup** 
 
 1. Install dependencies from `requirements.txt` into your designated environment. 
+2. (Optional) Import package dependencies from `imports.py` into your designated environment.
 
 **Strava API Key Setup and Activation**
 
@@ -47,7 +48,7 @@ This project aims to create a tool that catalogues, visualizes, and provides mou
 
 **Launch Webpage**
 
-10. Click on the link that appears in your console upon running `app.py` and it should open `map.html`. 
+10. Click on the link that appears in your console upon running `app.py` and it should open `map.html`. The website is ready to go! ٩(ˊᗜˋ*)و ♡
 
 
 ## Database
@@ -68,7 +69,7 @@ pgAdmin are used for spatial data storage and analysis.
 - **OSM:** Providing the basemap for search context on the frontend site, Leaflet was used to facilitate the OSM to website connection.
 
 ### Transform
-- Trails were filtered based on location, the island of Madeira were split into 9 tiles, drawn by specified coordinates, and trails located within each tile were called.
+- Trails were filtered based on location, the island of Madeira were split into 9 tiles, drawn by specified coordinates, and trails located within each tile were called from the Strava API.
 - Once loaded into the database, the climb categories were recoded for clarification.
 
 ### Load
@@ -91,26 +92,12 @@ pgAdmin are used for spatial data storage and analysis.
 - flask
     - flask, jsonify, render_template, request
 
+## Reflection and Future Work
+- The number of tiles that enclose our project area of Madeira could be greater, or each tile can be smaller, to increase the number of trails that can be called from Strava, as each Strava API inquiry per tile yields a maximum of 10 trails. 
+- Additional sources can be identified to make data on existing trails more robust, as well as increase the number and diversity of trails included within the map.
+- Additional features on the frontend, such as being able to view all reviews or all submitted reports, would create a more robust user experience.
+- Creating a feedback mechanism of confirming the existence and status of reported issues, such as a fallen tree on a trail (like in Waze), would add more database connections and also enable a more interactive user experience.
 
  ##
 _Thanks for reading! (=^･ω･^=)_
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
