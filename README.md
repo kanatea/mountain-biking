@@ -4,9 +4,9 @@
 ## Overview
 This project aims to create a tool that catalogues, visualizes, and provides mountain bike trail information in Madeira to bikers by integrating spatial analytics and user insights and feedback within a database.
 
-**Group members:** Cameron Chalmers & Kana Tateishi
+**Group members:** Cameron Chalmers & Kana Tateishi (●＾o＾●)
 
-### Key Features
+### Key Features (◕‿◕✿)
 - **Interactive map:** Clickable and adjustable map view. 
 - **Quick and easy overview:** Once clicked, a popup offers a quick overview of technical trail information, as well as user ratings and any recently reported issues on a given trail.
 - **Filter trails:** Filter by climb category, distance, elevation gain, and star rating.
@@ -90,6 +90,7 @@ pgAdmin are used for spatial data storage and analysis.
     - psycopg2 
 - flask
     - flask, jsonify, render_template, request
+
 
 
 
