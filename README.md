@@ -36,6 +36,7 @@ A registered Strava account is required to set up an app and access the Strava A
 
 4. Run `refresh_access_token.py` in the _`strava_api`_ folder  to get the new *access_token* value. 
 5. Plug the new *access token* in the designated place in `test_strava_api.py` in the _`strava_api`_ folder and `load_segments_to_db.py` in the _`etl`_ folder.
+
 _(Optional)_ Run `test_strava_api.py` to make sure you have an active connection to the Strava API.
 
 **Database Setup**
@@ -48,6 +49,7 @@ _(Optional)_ Run `test_strava_api.py` to make sure you have an active connection
 **ETL Process**
 
 _(Optional)_ In the _`etl`_ folder, run `test_db_connection.py` to test the database connection.
+
 7. Run `load_segments_to_db.py` to load Strava trail data into pgAdmin.
 8. Run `update_polylines.py` to load trail polyline geometry for our trail data on pgAdmin.
 9. Run `4_data_processing.sql` in pgAdmin for data transformation and processing.
@@ -111,6 +113,7 @@ pgAdmin are used for spatial data storage and analysis.
 
  ##
 _Thanks for reading! (=^･ω･^=)_
+
 
 
 
