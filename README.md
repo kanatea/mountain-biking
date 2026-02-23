@@ -54,6 +54,7 @@ Group members: Cameron Chalmers & Kana Tateishi
 PostgreSQL and PostGIS are used for spatial data storage and analysis.
 
 **Tables**
+|-----------------|-------------|
 | `strava.trails` | Stores trail information (name, distance, polylines). |
 | `pa.users` | Stores usernames for tracking feedback. |
 | `pa.trails` | Stores trail names. |
@@ -90,4 +91,5 @@ Database integration:
 - requests
 - json
 - flask, flask-cors
+
 
