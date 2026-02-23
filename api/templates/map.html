@@ -1263,26 +1263,55 @@
                             Average Rating: ${ratingText}
                         `;
                     }
-
-                    // POPUP INFORMATION (dynamic: includes latest trail report if recent)
-                        function updatePopupWithLatestReport(popup, trail) {
-                            // Start with base content (stats + rating)
-                            let content = buildBasePopup(trail);
-
-                            fetch(`/api/latest_report?trail_name=${encodeURIComponent(trail.name)}`)
-                                .then(res => res.json())
-                                .then(data => {
-                                    if (data.has_recent) {
-                                        // Optionally format date more nicely if you want
-                                        content += `<br /><br /><strong>Latest trail report (last 2 weeks):</strong><br />${data.maint_comment}`;
-                                    }
-                                    popup.setContent(content);
-                                })
-                                .catch(err => {
-                                    console.error('Error loading latest report:', err);
-                                    popup.setContent(content); // fall back to base content
-                                });
+                    // format recent reviews into HTML
+                    function formatReviewsHtml(reviews) {
+                        if (!reviews || reviews.length === 0) {
+                            return '<strong>Recent reviews:</strong><br />No reviews yet.';
                         }
+
+                        let html = '<strong>Recent reviews:</strong><br />';
+                        reviews.forEach(r => {
+                            const stars = r.rating ? '★'.repeat(Math.round(r.rating)) : '';
+                            const user  = r.username || 'Anonymous';
+                            const text  = r.comment || '';
+                            html += `<div style="margin-top:4px;"><strong>${stars}</strong> ${user}: ${text}</div>`;
+                        });
+                        return html;
+                    }
+
+                    // POPUP INFORMATION (dynamic: includes latest trail report if recent and 5 most recent reviews)
+                    function updatePopupWithLatestReport(popup, trail) {
+                        let content = buildBasePopup(trail);
+
+                        // 1) Latest maintenance report
+                        fetch(`/api/latest_report?trail_name=${encodeURIComponent(trail.name)}`)
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.has_recent) {
+                                    content += `<br /><br /><strong>Latest trail report (last 2 weeks):</strong><br />${data.maint_comment}`;
+                                }
+                            })
+                            .catch(err => {
+                                console.error('Error loading latest report:', err);
+                            })
+                            .finally(() => {
+                                // Always add a blank line before reviews section
+                                content += '<br /><br />';
+
+                                // 2) Recent user reviews
+                                fetch(`/api/trail_reviews?trail_name=${encodeURIComponent(trail.name)}`)
+                                    .then(res => res.json())
+                                    .then(reviews => {
+                                        content += formatReviewsHtml(reviews);
+                                        popup.setContent(content);
+                                    })
+                                    .catch(err => {
+                                        console.error('Error loading reviews:', err);
+                                        // Show at least what we have so far
+                                        popup.setContent(content);
+                                    });
+                            });
+                    }
 
                         // Bind popup and hook into the popupopen event
                         const popup = L.popup().setContent('Loading…');
