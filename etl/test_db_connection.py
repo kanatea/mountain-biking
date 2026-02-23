@@ -1,6 +1,7 @@
 ##This script is to test the database connection between the strava api and our database on pg admin
 ##If the connection is successful, a success message will print on our console
-# import psycopg2
+
+import psycopg2
 
 DB_NAME = "madeira_trails"   # change with the database name you set
 DB_USER = "postgres"         # change with your username
@@ -30,3 +31,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
