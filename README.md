@@ -87,10 +87,13 @@ Database integration:
 - `GET /maintenance` - Retrieve most recent maintenance request submitted by users
 
 ## Libraries and Packages
-- python, pandas, geopandas
+- python
+    - time, os, requests
 - psycopg2-binary, psycopg2
-- os, requests
-- flask, flask-cors
+    - psycopg2 
+- flask
+    - flask, jsonify, render_template, request
+
 
 
 
