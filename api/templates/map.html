@@ -554,10 +554,22 @@
             function toggleDropdown(id) {
                 const item = document.getElementById(id);
                 const isOpen = item.classList.contains('open');
-                // close all
                 document.querySelectorAll('.nav-item.open').forEach(el => el.classList.remove('open'));
-                if (!isOpen) item.classList.add('open');
-            }
+
+                if (!isOpen) {
+                    item.classList.add('open');
+
+                    // If opening the Review dropdown, reset it
+                    if (id === 'item-reviews') {
+                    resetReviewForm();
+                    }
+
+                    // If opening the Report dropdown, we’ll also reset it (next section)
+                    if (id === 'item-report') {
+                    resetReportForm();
+                    }
+                }
+                }
 
             // Close on outside click
             document.addEventListener('click', e => {
@@ -583,6 +595,34 @@
                 stars.forEach(s => s.classList.toggle('selected', parseInt(s.dataset.val) <= selectedRating));
             });
             });
+
+        // Reset review form
+        function resetReviewForm() {
+        const form = document.querySelector('#item-reviews .review-form');
+        if (!form) return;
+
+        // Clear inputs
+        const usernameInput = document.querySelector('#review-username');
+        const trailInput    = document.querySelector('#review-trail-input');
+        const commentArea   = document.querySelector('#item-reviews .review-textarea');
+
+        if (usernameInput) usernameInput.value = '';
+        if (trailInput)    trailInput.value    = '';
+        if (commentArea)   commentArea.value   = '';
+
+        // Reset stars
+        const stars = document.querySelectorAll('#item-reviews .star');
+        stars.forEach(s => s.classList.remove('selected'));
+        selectedRating = 0;
+
+        // Show form again, hide any thank‑you message
+        form.style.display = 'flex';
+        const thanks = document.querySelector('#item-reviews .review-thanks');
+        if (thanks) {
+            thanks.style.display = 'none';
+            thanks.innerHTML = '';
+        }
+        }
 
             // Review submit
             document.querySelector('#review-submit').addEventListener('click', () => {
@@ -740,6 +780,26 @@
             );
             });
 
+        // Reset report dropdown    
+        function resetReportForm() {
+            const form = document.querySelector('#report-form');
+            if (!form) return;
+
+            const trailInput  = document.querySelector('#report-trail');
+            const commentArea = document.querySelector('#report-comment');
+
+            if (trailInput)  trailInput.value  = '';
+            if (commentArea) commentArea.value = '';
+
+            // Show form, hide thank‑you
+            form.style.display = 'flex';
+            const thanks = document.querySelector('#report-thanks');
+            if (thanks) {
+                thanks.style.display = 'none';
+                thanks.innerHTML = '';
+            }
+            }
+        
              // Report a Problem submit
             document.querySelector('#report-submit').addEventListener('click', () => {
                 const trail_name  = document.querySelector('#report-trail').value.trim();
