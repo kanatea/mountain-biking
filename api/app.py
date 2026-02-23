@@ -1,8 +1,8 @@
 ##This script runs the API connections
 
-#from flask import Flask, jsonify, render_template, request
-#import psycopg2
-#from datetime import datetime, timedelta
+from flask import Flask, jsonify, render_template, request
+import psycopg2
+from datetime import datetime, timedelta
 
 
 DB_NAME = "madeira_trails"    #replace with your database name
@@ -219,6 +219,37 @@ def get_trail_ratings():
 
     return jsonify(ratings)
 
+# Las t 5 reviews for chosen trail
+@app.get("/api/trail_reviews")
+def get_trail_reviews():
+    trail_name = request.args.get("trail_name")
+    if not trail_name:
+        return jsonify({"error": "trail_name is required"}), 400
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+    # Adjust column list/names if needed
+    cur.execute("""
+        SELECT username, rating, comment, created_at
+        FROM pa.trail_ratings
+        WHERE trail_name = %s
+        ORDER BY created_at DESC
+        LIMIT 5;
+    """, (trail_name,))
+    rows = cur.fetchall()
+    cur.close()
+    conn.close()
+
+    reviews = []
+    for username, rating, comment, created_at in rows:
+        reviews.append({
+            "username": username,
+            "rating": float(rating) if rating is not None else None,
+            "comment": comment,
+            "created_at": created_at.isoformat() if created_at else None,
+        })
+
+    return jsonify(reviews)
 
 ## To read the html file that establishes the front-end
 @app.get("/")
