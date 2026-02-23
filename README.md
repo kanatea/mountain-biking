@@ -87,9 +87,13 @@ Database integration:
 
 ## Libraries and Packages
 - pandas, geopandas
-- requests
+- psycopg2-binary, psycopg2
+- os, requests
 - json
 - flask, flask-cors
+- python
+
+
 
 
 
