@@ -1,8 +1,8 @@
 ##This script runs the API connections
 
-from flask import Flask, jsonify, render_template, request
-import psycopg2
-from datetime import datetime, timedelta
+#from flask import Flask, jsonify, render_template, request
+#import psycopg2
+#from datetime import datetime, timedelta
 
 
 DB_NAME = "madeira_trails"    #replace with your database name
@@ -227,6 +227,7 @@ def index():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 
 
