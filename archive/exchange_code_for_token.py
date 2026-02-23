@@ -1,6 +1,6 @@
-#import requests
-
 #using the code from generate_auth_url to get the token, which is to be used in refresh_access_token
+
+import requests
 
 # FILL THESE IN CAREFULLY:
 CLIENT_ID = "201696"            # e.g. "12345" (from Strava API app page)
@@ -25,5 +25,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
