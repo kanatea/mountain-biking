@@ -89,8 +89,8 @@ Database integration:
 - python, pandas, geopandas
 - psycopg2-binary, psycopg2
 - os, requests
-- json
 - flask, flask-cors
+
 
 
 
