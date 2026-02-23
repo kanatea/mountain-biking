@@ -1,7 +1,8 @@
 ##This script is to get the new refresh access token to establish the device to api connection
 ##Running this script should yield the new refresh access token, which should be plugged into the test_strava_api script
 ##The refresh token should also be plugged into the load_segments_to_db script in the etl folder
-#import requests
+
+import requests
 
 CLIENT_ID = "201696"            # your strava user ID - in this case it's cammy's
 CLIENT_SECRET = "633f43ca5566dc20c8ba22cb10668f193a381cb8"    # strava secret client
@@ -21,5 +22,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
