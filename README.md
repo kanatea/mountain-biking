@@ -108,15 +108,14 @@ pgAdmin are used for spatial data storage and analysis.
     - flask, jsonify, render_template, request
 
 ## Reflection and Future Work
-- The number of tiles that enclose our project area of Madeira could be greater, or each tile can be smaller, to increase the number of trails that can be called from Strava, as each Strava API inquiry per tile yields a maximum of 10 trails. 
-- Additional sources can be identified to make data on existing trails more robust, as well as increase the number and diversity of trails included within the map.
-- Additional features on the frontend, such as being able to view all reviews or all submitted reports, would create a more robust user experience.
-- Creating a feedback mechanism of confirming the existence and status of reported issues, such as a fallen tree on a trail (like in Waze), would add more database connections and also enable a more interactive user experience.
-- Allow users to have a "Use My Location!" feature or be able to pinpoint a specific location on a trail when reporting trial maintenance issues.
+- Increase the number of trails 
+    - The number of tiles that enclose our project area of Madeira could be greater, or each tile can be smaller, to increase the number of trails that can be called from Strava, as each Strava API inquiry per tile yields a maximum of 10 trails. 
+    - Additional sources can be identified to make data on existing trails more robust, as well as increase the number and diversity of trails included within the map.
+- Additional features on the frontend for a more robust user experience:
+    - Feature to view all reviews or all submitted reports
+    - Creating a feedback mechanism of confirming the existence and status of reported issues, such as a fallen tree on a trail (like in Waze), would add more database connections and also enable a more interactive user experience.
+    - Allow users to have a "Use My Location!" feature or be able to pinpoint a specific location on a trail when reporting trial maintenance issues.
+    - Feature that displays trail reviews of users
 
  ##
 _Thanks for reading! (=^･ω･^=)_
-
-
-
-
