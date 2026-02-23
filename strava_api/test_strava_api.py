@@ -1,6 +1,7 @@
 ##This script is to test the device to strava api connection 
 ##If the connection is successful, your strava account information should display on the console
-#import requests
+
+import requests
 
 ACCESS_TOKEN = "95ece59d960098fe62ecbff2c03f4e211150f700" # The new refresh access token code from running the refresh_access_token script should go here
 
@@ -15,3 +16,4 @@ def main():
 if __name__ == "__main__":
 
     main()
+
