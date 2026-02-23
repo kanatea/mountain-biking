@@ -72,26 +72,26 @@ Data sources:
 Data processing:
 - Trails were filtered based on location, the island of Madeira were split into 9 tiles, drawn by specified coordinates, and trails located within each tile were called.
 - Once loaded into the database, the climb categories were recoded for clarification.
-- 
 
 ### Load
 Database integration:
 - Processed data is loaded into pgAdmin in the `strava.trails` table, which is displayed as trial data on the frontend
 - The frontend site allows users to submit reviews and maintenance requests, which updates the pgAdmin database. The review data is stored on `pa.trail_ratings` and the maintenance data is stored on `pa.maintenance`.
-- Aggregate trail rating data and most recent maintenance requests are called from the database back to the frontend. 
+- Average trail rating data and most recent maintenance requests are called from the database back to the frontend to dynamically display user input.
 
 ## API
-- `GET /trails`
-- `POST /submit_review` 
-- `POST /submit_review`
-- `GET /trails` 
-- `GET /trails` 
+- `GET /trails` - Retrieve running trail information
+- `POST /reviews` - Submit ratings and reviews on specified trails
+- `POST /report` - Submit a maintenance report or issue on specified trails
+- `GET /trail_ratings` - Retrieve average trail rating submitted by users
+- `GET /maintenance` - Retrieve most recent maintenance request submitted by users
 
 ## Libraries and Packages
 - python, pandas, geopandas
 - psycopg2-binary, psycopg2
 - os, requests
 - flask, flask-cors
+
 
 
 
