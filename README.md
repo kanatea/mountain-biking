@@ -54,29 +54,31 @@ Group members: Cameron Chalmers & Kana Tateishi
 PostgreSQL and PostGIS are used for spatial data storage and analysis.
 
 **Tables**
-- `strava.trails` - Stores trail information (name, distance, polylines)
+- `strava.trails` - Stores trail information (trail name, distance, elevation gain, trail grade, start and end point, climb category, polylines/trail geometry)
 - `pa.users` - Stores usernames for tracking feedback
-- `pa.trails` - Stores trail names
-- `pa.reviews` - Collects feedback on trails (ratings, text reviews)
-- `pa.maint` - Maintenance
+- `pa.trails` - Stores trail names for ID'ing reviews and maintenance issues
+- `pa.trail_ratings` - Collects feedback on trails (ratings, text reviews, timestamp)
+- `pa.maintenance` - Collects feedback on trail condition and any issues (requests, timestamp)
 
 
 ## ETL (Extract, Transform, Load)
 
 ### Extract
 Data sources:
-- Strava - Provides mountain biking trail data with attributes that include name of trail, overall distance, the average grade, elevation gain, and the start and end point of the trail. 
-- OSM - Basemap
+- Strava - Provides mountain biking trail data with attributes that include name of trail, overall distance, trail grade, elevation gain, climb category, trail geometry, and the start and end point of the trail. Data extraction uses the Strava API. 
+- OSM - Providing the basemap for search context on the frontend site, Leaflet was used to facilitate the OSM to website connection.
 
 ### Transform
 Data processing:
-- All data is standardized to EPSG:2942 (Madeira 1936 / UTM zone 28N)
-- Shapefile consolidating basemap with Strava data 
+- Trails were filtered based on location, the island of Madeira were split into 9 tiles, drawn by specified coordinates, and trails located within each tile were called.
+- Once loaded into the database, the climb categories were recoded for clarification.
+- 
 
 ### Load
 Database integration:
-- Processed data is loaded into PostgreSQL/PostGIS in the trail table.
-- The rating table stores rider ratings and feedback.
+- Processed data is loaded into pgAdmin in the `strava.trails` table, which is displayed as trial data on the frontend
+- The frontend site allows users to submit reviews and maintenance requests, which updates the pgAdmin database. The review data is stored on `pa.trail_ratings` and the maintenance data is stored on `pa.maintenance`.
+- Aggregate trail rating data and most recent maintenance requests are called from the database back to the frontend. 
 
 ## API
 - `GET /trails`
@@ -90,6 +92,7 @@ Database integration:
 - psycopg2-binary, psycopg2
 - os, requests
 - flask, flask-cors
+
 
 
 
