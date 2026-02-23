@@ -86,12 +86,12 @@ Database integration:
 - `GET /trails` 
 
 ## Libraries and Packages
-- pandas, geopandas
+- python, pandas, geopandas
 - psycopg2-binary, psycopg2
 - os, requests
 - json
 - flask, flask-cors
-- python
+
 
 
 
