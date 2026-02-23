@@ -20,28 +20,27 @@ This project aims to create a tool that catalogues, visualizes, and provides mou
 **Environment Setup** 
 
 1. Install dependencies from `requirements.txt` into your designated environment.
-2. Import package dependencies from `imports.py` into your designated environment.
 
 **Strava API Key Setup and Activation**
 
 A registered Strava account is required to set up an app and access the Strava API. 
 
-3. Access the Strava website and follow these directions to set up your app: https://developers.strava.com/. You may proceed to the following bulleted steps once your app is set up on the Strava website.
+2. Access the Strava website and follow these directions to set up your app: https://developers.strava.com/. You may proceed to the following bulleted steps once your app is set up on the Strava website.
 
     - Run `generate_auth_url.py` in the _`archive`_ folder to receive an *authorization/authentication code*.
     - Plug the *authorization/authentication code* in the designated place in `exchange_code_for_token.py` in the _`archive folder`_ to get the *access_token* value.
     - Plug the *access_token* value in the designated place in `refresh_access_token.py` in the _`strava_api`_ folder.
   
-    Step 3 needs to only be done once; once the Strava API is activated, only steps 4 onward are required to initialize the connection every time.
+    Step 2 needs to only be done once; once the Strava API is activated, only steps 4 onward are required to initialize the connection every time.
 
-4. Run `refresh_access_token.py` in the _`strava_api`_ folder  to get the new *access_token* value. 
-5. Plug the new *access token* in the designated place in `test_strava_api.py` in the _`strava_api`_ folder and `load_segments_to_db.py` in the _`etl`_ folder.
+3. Run `refresh_access_token.py` in the _`strava_api`_ folder  to get the new *access_token* value. 
+4. Plug the new *access token* in the designated place in `test_strava_api.py` in the _`strava_api`_ folder and `load_segments_to_db.py` in the _`etl`_ folder.
 
     _(Optional)_ Run `test_strava_api.py` to make sure you have an active connection to the Strava API.
 
 **Database Setup**
 
-6. Run SQL files 0-3 in the _`database`_ folder in pgAdmin to set up the database, schemas, and tables.
+5. Run SQL files 0-3 in the _`database`_ folder in pgAdmin to set up the database, schemas, and tables.
     - `0_create_db.sql` creates the database
     - `1_schema_ext.sql` establishes the schema and adds extensions
     - `2_create_strava_table.sql` and `3_create_table.sql` creates tables and establishes connections
@@ -50,19 +49,18 @@ A registered Strava account is required to set up an app and access the Strava A
 
 **ETL Process**
 
-7. In the _`etl`_ folder, run `load_segments_to_db.py` to load Strava trail data into pgAdmin.
-8. Run `update_polylines.py` to load trail polyline geometry for our trail data on pgAdmin.
-9. Run `4_data_processing.sql` from  the _`database`_ folder in pgAdmin for data transformation and processing.
+6. In the _`etl`_ folder, run `load_segments_to_db.py` to load Strava trail data into pgAdmin.
+7. Run `update_polylines.py` to load trail polyline geometry for our trail data on pgAdmin.
 
     _(Optional)_ Run `sample_data.sql` from  the _`database`_ folder in pgAdmin to pre-populate sample review data for the website.
 
 **API Activation**
 
-10. Run `app.py` in the _`api`_ folder to connect the database to the website, which is contained in the _`templates`_ folder as `map.html`. 
+8. Run `app.py` in the _`api`_ folder to connect the database to the website, which is contained in the _`templates`_ folder as `map.html`. 
 
 **Launch Webpage**
 
-11. Click on the link that appears in your console upon running `app.py` and it should open `map.html`. The website is ready to go! ٩(ˊᗜˋ*)و ♡
+9. Click on the link that appears in your console upon running `app.py` and it should open `map.html`. The website is ready to go! ٩(ˊᗜˋ*)و ♡
 
 
 ## Database
@@ -84,8 +82,8 @@ pgAdmin are used for spatial data storage and analysis.
 
 ### Transform
 - Trails were filtered based on location, the island of Madeira were split into 9 tiles, drawn by specified coordinates, and trails located within each tile were called from the Strava API.
-- Once loaded into the database, the climb categories were recoded for clarification, which is used for their color coding on the frontend.
-- Climb distance and elevation gain were similarly grouped into buckets for filtering functionality on the frontend.
+- The climb categories were recoded for clarification, which is used for their color coding on the frontend. All data transformations can be found in `map.html` under the _pill categories_ section
+- Climb distance and elevation gain were similarly grouped into buckets for filtering functionality on the frontend. 
 
 ### Load
 - Processed data is loaded into pgAdmin in the `strava.trails` table, which is displayed as trial data on the frontend
@@ -101,7 +99,7 @@ pgAdmin are used for spatial data storage and analysis.
 
 ## Libraries and Packages
 - python
-    - time, os, requests
+    - time, os, requests, datetime, timedelta
 - psycopg2-binary, psycopg2
     - psycopg2 
 - flask
@@ -119,3 +117,4 @@ pgAdmin are used for spatial data storage and analysis.
 
  ##
 _Thanks for reading! (=^･ω･^=)_
+
