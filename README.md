@@ -64,8 +64,8 @@ pgAdmin are used for spatial data storage and analysis.
 ## ETL (Extract, Transform, Load)
 
 ### Extract
-- Strava - Provides mountain biking trail data with attributes that include name of trail, overall distance, trail grade, elevation gain, climb category, trail geometry, and the start and end point of the trail. Data extraction uses the Strava API. 
-- OSM - Providing the basemap for search context on the frontend site, Leaflet was used to facilitate the OSM to website connection.
+- **Strava:** Provides mountain biking trail data with attributes that include name of trail, overall distance, trail grade, elevation gain, climb category, trail geometry, and the start and end point of the trail. Data extraction uses the Strava API. 
+- **OSM:** Providing the basemap for search context on the frontend site, Leaflet was used to facilitate the OSM to website connection.
 
 ### Transform
 - Trails were filtered based on location, the island of Madeira were split into 9 tiles, drawn by specified coordinates, and trails located within each tile were called.
@@ -77,11 +77,11 @@ pgAdmin are used for spatial data storage and analysis.
 - Average trail rating data and most recent maintenance requests are called from the database back to the frontend to dynamically display user input.
 
 ## API
-- `GET /trails` - Retrieve running trail information
-- `POST /reviews` - Submit ratings and reviews on specified trails
-- `POST /report` - Submit a maintenance report or issue on specified trails
-- `GET /trail_ratings` - Retrieve average trail rating submitted by users
-- `GET /maintenance` - Retrieve most recent maintenance request submitted by users
+- `GET /trails`: Retrieve running trail information
+- `POST /reviews`: Submit ratings and reviews on specified trails
+- `POST /report`: Submit a maintenance report or issue on specified trails
+- `GET /trail_ratings`: Retrieve average trail rating submitted by users
+- `GET /maintenance`: Retrieve most recent maintenance request submitted by users
 
 ## Libraries and Packages
 - python
@@ -90,6 +90,7 @@ pgAdmin are used for spatial data storage and analysis.
     - psycopg2 
 - flask
     - flask, jsonify, render_template, request
+
 
 
 
