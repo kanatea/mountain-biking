@@ -1,7 +1,9 @@
 ##This script runs the API connections
 
-#from flask import Flask, jsonify, render_template, request
-#import psycopg2
+from flask import Flask, jsonify, render_template, request
+import psycopg2
+from datetime import datetime, timedelta
+
 
 DB_NAME = "madeira_trails"    #replace with your database name
 DB_USER = "postgres"          #replace with your username         
@@ -143,6 +145,46 @@ def submit_report():
     cur.close()
     conn.close()
     return jsonify({'success': True}), 201
+
+# Latest trail report for popup
+@app.get("/api/latest_report")
+def get_latest_report():
+    trail_name = request.args.get("trail_name")
+    if not trail_name:
+        return jsonify({"error": "trail_name is required"}), 400
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    # Adjust column name if not `created_at`
+    cur.execute("""
+        SELECT maint_comment, created_at
+        FROM pa.maintenance
+        WHERE trail_name = %s
+        ORDER BY created_at DESC
+        LIMIT 1;
+    """, (trail_name,))
+    row = cur.fetchone()
+    cur.close()
+    conn.close()
+
+    if not row:
+        # No reports at all for this trail
+        return jsonify({"has_recent": False})
+
+    maint_comment, created_at = row
+
+    cutoff = datetime.utcnow() - timedelta(days=14)
+    if created_at < cutoff:
+        # Report exists but is older than 2 weeks
+        return jsonify({"has_recent": False})
+
+    return jsonify({
+        "has_recent": True,
+        "trail_name": trail_name,
+        "maint_comment": maint_comment,
+        "created_at": created_at.isoformat()
+    })
 
 # For ratings - This takes the stored user rating data on pg admin and aggregates it 
 # to return average rating per trail to display on the front end website
