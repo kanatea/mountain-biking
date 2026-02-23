@@ -11,6 +11,7 @@
     <style>
 
         /* Map from OSM */
+        /* Map from OSM */
         #map { 
         height: calc(100vh - 59px);
         width: 100%;
@@ -523,7 +524,7 @@
                             placeholder="Search for a trail…" 
                             autocomplete="off" />
                     <div class="review-trail-label">Description</div>
-                        <textarea class="review-textarea" id="report-comment" placeholder="How was the trail? Please be nice and use nice words, we appreciate constructive criticism :-)"></textarea>
+                        <textarea class="review-textarea" id="report-comment" placeholder="Did you come across an issue? What was it and where on the trail?"></textarea>
                         <button class="review-submit" id="report-submit">Submit Report</button>
                     </div>
                     <div class="review-thanks" id="report-thanks"></div>
@@ -855,17 +856,6 @@
         <script>
             // Pill categories
 
-            //Code climb category
-            function getClimbCategory(category) {
-                if (category == 0) return 'Not Categorized';
-                if (category == 1) return 'Category 4';
-                if (category == 2) return 'Category 3';
-                if (category == 3) return 'Category 2';
-                if (category == 4) return 'Category 1';
-                if (category == 5) return 'Hors Catégorie';
-                return 'Unknown';
-            }
-
             //Code trail distance
             function getTrailDistance(distance) {
                 if (distance < 5000) return '< 5 km';
@@ -884,7 +874,6 @@
             }
 
             
-            //Filter for climb category
             function filterTrails(selectedCategory) {
                 const categoryMap = {
                     'All':              null,
@@ -897,9 +886,8 @@
                 };
 
                 trailLayers.forEach(obj => {
-                    const category = getClimbCategory(obj.trail.climb_category)
                     const mapped = categoryMap[selectedCategory];
-                    const show = !mapped || category === mapped;
+                    const show = !mapped || obj.trail.climb_category_desc === mapped;
                     if (show) {
                     obj.line.addTo(map);
                     obj.marker.addTo(map);
@@ -910,7 +898,6 @@
                 });
             }
 
-            //Filter for trail distance
             function filterDistance(selectedDistance) {
                 const distanceMap = {
                     'All':              null,
@@ -933,7 +920,6 @@
                 });
             }
 
-            //Filter for trail elevation
             function filterElevation(selectedElevation) {
                 const elevationMap = {
                     'All':              null,
@@ -957,7 +943,7 @@
                 });
             }
 
-            //Filter for trail rating
+            //filter for trail rating
             function filterByRating(selectedStar) {
                 const ratingMap = {
                     'All':   null,
@@ -1230,12 +1216,12 @@
 
                         //Color code trails
                         function getClimbColor(category) {
-                            if (category == 0) return 'gray';
-                            if (category == 1)  return '#2F9400'; // green  — easy
-                            if (category == 2)  return '#498FC4'; // blue   — moderate
-                            if (category == 3)  return '#C44949';//red
-                            if (category == 4)  return 'black'; // black  — hard
-                            if (category == 5)  return '#C48449'; // orange — very steep
+                            if (category == "Not Categorized") return 'gray';
+                            if (category == "Category 4")  return '#2F9400'; // green  — easy
+                            if (category == "Category 3")  return '#498FC4'; // blue   — moderate
+                            if (category == "Category 2")  return '#C44949';//red
+                            if (category == "Category 1")  return 'black'; // black  — hard
+                            if (category == "Hors Catégorie")  return '#C48449'; // orange — very steep
                             return 'gray';
                             }
 
@@ -1243,18 +1229,17 @@
                         // If we have a polyline, use the full shape
                         if (trail.polyline) {
                         try {
-                            line = L.Polyline.fromEncoded(trail.polyline, { color: getClimbColor(trail.climb_category) }).addTo(map);
+                            line = L.Polyline.fromEncoded(trail.polyline, { color: getClimbColor(trail.climb_category_desc) }).addTo(map);
                         } catch (e) {
                             console.error('Error decoding polyline for trail', trail.strava_segment_id, e);
                             // Fallback to straight line if decoding fails
-                            line = L.polyline([start, end], { color: getClimbColor(trail.climb_category) }).addTo(map);
+                            line = L.polyline([start, end], { color: getClimbColor(trail.climb_category_desc) }).addTo(map);
                         }
                         } else {
                         // Fallback: straight line between start and end
-                        line = L.polyline([start, end], { color: getClimbColor(trail.climb_category) }).addTo(map);
+                        line = L.polyline([start, end], { color: getClimbColor(trail.climb_category_desc) }).addTo(map);
                         }
 
-            
                         // Add a marker at start
                         var marker = L.circleMarker(start, { radius: 4, color: 'green' }).addTo(map);
 
@@ -1274,7 +1259,7 @@
                             <strong>${trail.name}</strong><br />
                             Distance: ${trail.distance_m} m<br />
                             Elevation gain: ${trail.elevation_gain_m} m<br />
-                            Climb grade: ${getClimbCategory(trail.climb_category)} <br />
+                            Climb grade: ${trail.climb_category_desc} <br />
                             Average Rating: ${ratingText}
                         `;
                     }
@@ -1357,7 +1342,5 @@
 
     </body>
 </html>
-
-
 
 
