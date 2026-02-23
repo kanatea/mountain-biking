@@ -78,7 +78,7 @@ def get_trails():
             "distance_m": distance_m,
             "elevation_gain_m": elevation_gain_m,
             "avg_grade": float(avg_grade) if avg_grade is not None else None,
-            "climb_category_desc": climb_cat_desc,
+            "climb_category": climb_cat,
             "start_lat": start_lat,
             "start_lon": start_lon,
             "end_lat": end_lat,
@@ -219,7 +219,9 @@ def get_trail_ratings():
 
     return jsonify(ratings)
 
-# Las t 5 reviews for chosen trail
+# Last 5 reviews for chosen trail
+# This takes the stored user trail reviews on pg admin and returns the last 5 reviews
+# to display on the front end website
 @app.get("/api/trail_reviews")
 def get_trail_reviews():
     trail_name = request.args.get("trail_name")
@@ -258,6 +260,7 @@ def index():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 
 
