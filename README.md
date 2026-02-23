@@ -31,7 +31,7 @@ A registered Strava account is required to set up an app and access the Strava A
     - Plug the *authorization/authentication code* in the designated place in `exchange_code_for_token.py` in the _`archive folder`_ to get the *access_token* value.
     - Plug the *access_token* value in the designated place in `refresh_access_token.py` in the _`strava_api`_ folder.
   
-    Step 2 needs to only be done once; once the Strava API is activated, only steps 4 onward are required to initialize the connection every time.
+    Step 2 needs to only be done once; once the Strava API is activated, only steps 3 onward are required to initialize the connection every time.
 
 3. Run `refresh_access_token.py` in the _`strava_api`_ folder  to get the new *access_token* value. 
 4. Plug the new *access token* in the designated place in `test_strava_api.py` in the _`strava_api`_ folder and `load_segments_to_db.py` in the _`etl`_ folder.
@@ -117,4 +117,5 @@ pgAdmin are used for spatial data storage and analysis.
 
  ##
 _Thanks for reading! (=^･ω･^=)_
+
 
