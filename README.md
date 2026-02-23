@@ -90,8 +90,11 @@ pgAdmin are used for spatial data storage and analysis.
     - psycopg2 
 - flask
     - flask, jsonify, render_template, request
- 
+
+
+ ##
 _Thanks for reading! (=^･ω･^=)_
+
 
 
 
