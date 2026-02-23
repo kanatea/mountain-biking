@@ -41,7 +41,7 @@ A registered Strava account is required to set up an app and access the Strava A
 
 **Database Setup**
 
-6. Run SQL files 0-3 in the _`db`_ folder in pgAdmin to set up the database, schemas, and tables.
+6. Run SQL files 0-3 in the _`database`_ folder in pgAdmin to set up the database, schemas, and tables.
     - `0_create_db.sql` creates the database
     - `1_schema_ext.sql` establishes the schema and adds extensions
     - `2_create_strava_table.sql` and `3_create_table.sql` creates tables and establishes connections
@@ -113,6 +113,7 @@ pgAdmin are used for spatial data storage and analysis.
 
  ##
 _Thanks for reading! (=^･ω･^=)_
+
 
 
 
