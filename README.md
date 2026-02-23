@@ -26,7 +26,7 @@ This project aims to create a tool that catalogues, visualizes, and provides mou
 
 A registered Strava account is required to set up an app and access the Strava API. 
 
-3. Access the Strava website and follow these directions to set up your app: You may proceed to the following bulleted steps once your app is set up on the Strava website.
+3. Access the Strava website and follow these directions to set up your app: https://developers.strava.com/. You may proceed to the following bulleted steps once your app is set up on the Strava website.
 
     - Run `generate_auth_url.py` in the _`archive`_ folder to receive an *authorization/authentication code*.
     - Plug the *authorization/authentication code* in the designated place in `exchange_code_for_token.py` in the _`archive folder`_ to get the *access_token* value.
@@ -111,6 +111,7 @@ pgAdmin are used for spatial data storage and analysis.
 
  ##
 _Thanks for reading! (=^･ω･^=)_
+
 
 
 
