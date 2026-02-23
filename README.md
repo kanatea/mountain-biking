@@ -19,14 +19,19 @@ This project aims to create a tool that catalogues, visualizes, and provides mou
 
 **Environment Setup** 
 
-1. Install dependencies from `requirements.txt` into your designated environment. 
-2. _(Optional)_ Import package dependencies from `imports.py` into your designated environment.
+1. Install dependencies from `requirements.txt` into your designated environment.
+2. Import package dependencies from `imports.py` into your designated environment.
 
 **Strava API Key Setup and Activation**
 
-3. 
-4. Run `refresh_access_token.py` in the _`strava_api`_ folder to get the new *access_token* value. 
-5. Plug the new access token in the designated place in `test_strava_api.py` in the _`strava_api`_ folder and `load_segments_to_db.py` in the _`etl`_ folder.
+A registered Strava account is required to set up an app and access the Strava API. 
+3. Access the Strava website and follow these directions to set up your app: You may proceed to the following bulleted steps once your app is set up on the Strava website. 
+    - Run `generate_auth_url.py` in the _`archive`_ folder to receive an *authorization/authentication code*.
+    - Plug the *authorization/authentication code* in the designated place in `exchange_code_for_token.py` in the _`archive folder`_ to get the *access_token* value.
+    - Plug the *access_token* value in the designated place in `refresh_access_token.py` in the _`strava_api`_ folder.
+Step 3 needs to only be done once; once the Strava API is activated, only steps 4 onward are required to initialize the connection every time.
+4. Run `refresh_access_token.py` in the _`strava_api`_ folder  to get the new *access_token* value. 
+5. Plug the new *access token* in the designated place in `test_strava_api.py` in the _`strava_api`_ folder and `load_segments_to_db.py` in the _`etl`_ folder.
 6. Run `test_strava_api.py` to make sure you have an active connection to the Strava API.
 
 **Database Setup**
@@ -102,5 +107,6 @@ pgAdmin are used for spatial data storage and analysis.
 
  ##
 _Thanks for reading! (=^･ω･^=)_
+
 
 
