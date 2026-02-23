@@ -2,9 +2,9 @@
 ##we broke the area of inquiry up into tiles to maximize the number of trails we can import across madeira.
 ##Run the update_polylines script after this to add polyline data
 
-#import requests
-#import psycopg2
-#import time
+import requests
+import psycopg2
+import time
 
 # Database credentials
 
@@ -229,5 +229,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
