@@ -146,6 +146,9 @@ def submit_report():
     conn.close()
     return jsonify({'success': True}), 201
 
+
+# This takes the stored maintenance reports on pg admin and returns the most recent report within 2 weeks
+# to display on the front end website
 # Latest trail report for popup
 @app.get("/api/latest_report")
 def get_latest_report():
@@ -224,6 +227,7 @@ def index():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 
 
