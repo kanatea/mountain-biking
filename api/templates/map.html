@@ -62,6 +62,13 @@
             flex-shrink: 0;
         }
 
+        /* logo*/
+        .nav-brand .logo {
+            height: 75px;        /* tweak as you like */
+            width: auto;
+            border-radius: 8px;  /* optional: soften corners */
+        }
+
         .nav-brand .icon {
             font-size: 22px;
             line-height: 1;
@@ -384,7 +391,9 @@
 
             <!-- Title -->
             <a href="#" class="nav-brand">
-                <!-- <h1><img src="MTB_Madeira.png" alt="logo" class="logo"></h1> -->
+                <img src="{{ url_for('static', filename='MTB_Madeira.png') }}"
+                    alt="MtB Madeira logo"
+                    class="logo">
                 <span class="wordmark">MtB Madeira</span>
             </a>
 
