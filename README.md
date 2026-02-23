@@ -52,7 +52,9 @@ A registered Strava account is required to set up an app and access the Strava A
 
 7. In the _`etl`_ folder, run `load_segments_to_db.py` to load Strava trail data into pgAdmin.
 8. Run `update_polylines.py` to load trail polyline geometry for our trail data on pgAdmin.
-9. Run `4_data_processing.sql` in pgAdmin for data transformation and processing.
+9. Run `4_data_processing.sql` from  the _`database`_ folder in pgAdmin for data transformation and processing.
+
+    _(Optional)_ Run `sample_data.sql` from  the _`database`_ folder in pgAdmin to pre-populate sample review data for the website.
 
 **API Activation**
 
@@ -113,17 +115,4 @@ pgAdmin are used for spatial data storage and analysis.
 
  ##
 _Thanks for reading! (=^･ω･^=)_
-
-
-
-
-
-
-
-
-
-
-
-
-
 
