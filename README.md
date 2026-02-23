@@ -97,7 +97,7 @@ pgAdmin are used for spatial data storage and analysis.
 - `POST /reviews`: Submit ratings and reviews on specified trails
 - `POST /report`: Submit a maintenance report or issue on specified trails
 - `GET /trail_ratings`: Retrieve average trail rating submitted by users
-- `GET /maintenance`: Retrieve most recent maintenance request submitted by users
+- `GET /latest_report`: Retrieve most recent maintenance request submitted by users
 
 ## Libraries and Packages
 - python
@@ -115,4 +115,5 @@ pgAdmin are used for spatial data storage and analysis.
 
  ##
 _Thanks for reading! (=^･ω･^=)_
+
 
