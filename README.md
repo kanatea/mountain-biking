@@ -13,7 +13,7 @@ This project aims to create a tool that catalogues, visualizes, and provides mou
 - **Submit ratings and reviews:** Users are able to submit reviews and ratings on trails.
 - **Search trails based on location:** Users can search for trails based on their location or specific cities within Madeira, with adjustable distance ranges.
 - **Report issues:** Users are able to report issues or submit maintenance requests on trails. 
--** Search trails based on name:** Users can utilize the search bar to look up trails by name.
+- **Search trails based on name:** Users can utilize the search bar to look up trails by name.
 
 ## Setup and Execution
 
@@ -64,17 +64,14 @@ pgAdmin are used for spatial data storage and analysis.
 ## ETL (Extract, Transform, Load)
 
 ### Extract
-Data sources:
 - Strava - Provides mountain biking trail data with attributes that include name of trail, overall distance, trail grade, elevation gain, climb category, trail geometry, and the start and end point of the trail. Data extraction uses the Strava API. 
 - OSM - Providing the basemap for search context on the frontend site, Leaflet was used to facilitate the OSM to website connection.
 
 ### Transform
-Data processing:
 - Trails were filtered based on location, the island of Madeira were split into 9 tiles, drawn by specified coordinates, and trails located within each tile were called.
 - Once loaded into the database, the climb categories were recoded for clarification.
 
 ### Load
-Database integration:
 - Processed data is loaded into pgAdmin in the `strava.trails` table, which is displayed as trial data on the frontend
 - The frontend site allows users to submit reviews and maintenance requests, which updates the pgAdmin database. The review data is stored on `pa.trail_ratings` and the maintenance data is stored on `pa.maintenance`.
 - Average trail rating data and most recent maintenance requests are called from the database back to the frontend to dynamically display user input.
@@ -93,6 +90,7 @@ Database integration:
     - psycopg2 
 - flask
     - flask, jsonify, render_template, request
+
 
 
 
