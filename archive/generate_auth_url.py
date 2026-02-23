@@ -1,5 +1,6 @@
-#import os
 ##run this first, gives us an authorization/authentication code within the url encoded on your console to activate the connection between the strava api and our device
+
+import os
 
 CLIENT_ID = "201696"  # replace with your actual client id
 REDIRECT_URI = "http://localhost/exchange_token"
@@ -15,4 +16,5 @@ url = (
 
 print("Open this URL in your browser:")
 print(url)
+
 
