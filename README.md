@@ -54,11 +54,11 @@ This project aims to create a tool that catalogues, visualizes, and provides mou
 pgAdmin are used for spatial data storage and analysis.
 
 **Tables**
-- `strava.trails` - Stores trail information (trail name, distance, elevation gain, trail grade, start and end point, climb category, polylines/trail geometry)
-- `pa.users` - Stores usernames for tracking feedback
-- `pa.trails` - Stores trail names for ID'ing reviews and maintenance issues
-- `pa.trail_ratings` - Collects feedback on trails (ratings, text reviews, timestamp)
-- `pa.maintenance` - Collects feedback on trail condition and any issues (requests, timestamp)
+- `strava.trails`: Stores trail information (trail name, distance, elevation gain, trail grade, start and end point, climb category, polylines/trail geometry)
+- `pa.users`: Stores usernames for tracking feedback
+- `pa.trails`: Stores trail names for ID'ing reviews and maintenance issues
+- `pa.trail_ratings`: Collects feedback on trails (ratings, text reviews, timestamp)
+- `pa.maintenance`: Collects feedback on trail condition and any issues (requests, timestamp)
 
 
 ## ETL (Extract, Transform, Load)
@@ -90,6 +90,7 @@ pgAdmin are used for spatial data storage and analysis.
     - psycopg2 
 - flask
     - flask, jsonify, render_template, request
+
 
 
 
