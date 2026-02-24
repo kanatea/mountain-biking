@@ -10,15 +10,15 @@ This project aims to create a tool that catalogues, visualizes, and provides mou
 - **Interactive map:** Clickable and adjustable map view. 
 - **Quick and easy overview:** Once clicked, a popup offers a quick overview of technical trail information, as well as user ratings and any recently reported issues on a given trail.
 - **Filter trails:** Filter by climb category, distance, elevation gain, and star rating.
+![Feature_1](screenshots/filter_by.png)
 - **Submit ratings and reviews:** Users are able to submit reviews and ratings ★ on trails.
+![Feature_2](screenshots/reviews.png)
 - **Search trails based on location:** Users can search for trails based on their location or specific cities within Madeira, with adjustable distance ranges.
-- **Report issues:** Users are able to report issues or submit maintenance requests on trails. 
+![Feature_3](screenshots/near_me.png)
+- **Report issues:** Users are able to report issues or submit maintenance requests on trails.
+![Feature_4](screenshots/report.png)
 - **Search trails based on name:** Users can utilize the search bar to look up trails by name.
 
-![Feature_1](screenshots/filter_by.png)
-![Feature_2](screenshots/review.png)
-![Feature_2](screenshots/near_me.png)
-![Feature_2](screenshots/report.png)
 
 ## Setup and Execution
 
@@ -122,6 +122,7 @@ pgAdmin are used for spatial data storage and analysis.
 
  ##
 _Thanks for reading! (=^･ω･^=)_
+
 
 
 
