@@ -94,11 +94,11 @@ pgAdmin is used for data storage and analysis.
 
 ### Transform
 - Trails were filtered based on location, the island of Madeira were split into 9 tiles, drawn by specified coordinates, and trails located within each tile were called from the Strava API.
-- The climb categories were recoded for clarification, which is used for their color coding on the frontend. All data transformations can be found in `map.html` under the _pill categories_ section
+- The climb categories were recoded for clarification, which is used for their color coding on the frontend. All data transformations can be found in `map.html` under the _pill categories_ section.
 - Climb distance and elevation gain were similarly grouped into buckets for filtering functionality on the frontend. 
 
 ### Load
-- Processed data is loaded into pgAdmin in the `strava.trails` table, which is displayed as trial data on the frontend
+- Processed data is loaded into pgAdmin in the `strava.trails` table, which is displayed as trial data on the frontend.
 - The frontend site allows users to submit reviews and maintenance requests, which updates the pgAdmin database. The review data is stored on `pa.trail_ratings` and the maintenance data is stored on `pa.maintenance`.
 - Average trail rating data and most recent maintenance requests are called from the database back to the frontend to dynamically display user input.
 
@@ -119,17 +119,17 @@ pgAdmin is used for data storage and analysis.
     - flask, jsonify, render_template, request
 
 ## Reflection and Future Work
-- Increase the number of trails 
+- Increase the number of trails:
     - The number of tiles that enclose our project area of Madeira could be greater, or each tile can be smaller, to increase the number of trails that can be called from Strava, as each Strava API inquiry per tile yields a maximum of 10 trails. 
     - Additional sources can be identified to make data on existing trails more robust, as well as increase the number and diversity of trails included within the map.
 - Additional features on the frontend for a more robust user experience:
-    - Feature to view all reviews or all submitted reports
+    - Feature to view all reviews or all submitted reports.
     - Creating a feedback mechanism of confirming the existence and status of reported issues, such as a fallen tree on a trail (like in Waze), would add more database connections and also enable a more interactive user experience.
-    - Allow users to have a "Use My Location!" feature or be able to pinpoint a specific location on a trail when reporting trial maintenance issues.
-    - Feature that displays trail reviews of users
+    - Allow users to have a "Use My Location!" feature or be able to pinpoint a specific location on a trail when reporting trial maintenance issues. This will allow for more accurate reports and faster responses.
 
  ##
 _Thanks for reading! (=^･ω･^=)_
+
 
 
 
