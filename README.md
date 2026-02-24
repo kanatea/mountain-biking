@@ -15,6 +15,8 @@ This project aims to create a tool that catalogues, visualizes, and provides mou
 - **Report issues:** Users are able to report issues or submit maintenance requests on trails. 
 - **Search trails based on name:** Users can utilize the search bar to look up trails by name.
 
+![Feature_01](screenshots/popup.png)
+
 ## Setup and Execution
 
 **Environment Setup** 
@@ -118,6 +120,7 @@ pgAdmin are used for spatial data storage and analysis.
 
  ##
 _Thanks for reading! (=^･ω･^=)_
+
 
 
 
