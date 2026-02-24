@@ -76,7 +76,7 @@ A registered Strava account is required to set up an app and access the Strava A
 9. Click on the link that appears in your console upon running `app.py` and it should open `map.html`. The website is ready to go! ٩(ˊᗜˋ*)و ♡
 
 ## Database
-pgAdmin are used for spatial data storage and analysis.
+pgAdmin is used for data storage and analysis.
 
 **Tables**
 - `strava.trails`: Stores trail information (trail name, distance, elevation gain, trail grade, start and end point, climb category, polylines/trail geometry)
@@ -130,6 +130,7 @@ pgAdmin are used for spatial data storage and analysis.
 
  ##
 _Thanks for reading! (=^･ω･^=)_
+
 
 
 
