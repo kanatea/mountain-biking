@@ -15,7 +15,10 @@ This project aims to create a tool that catalogues, visualizes, and provides mou
 - **Report issues:** Users are able to report issues or submit maintenance requests on trails. 
 - **Search trails based on name:** Users can utilize the search bar to look up trails by name.
 
-![Feature_01](screenshots/popup.png)
+![Feature_1](screenshots/filter_by.png)
+![Feature_2](screenshots/review.png)
+![Feature_2](screenshots/near_me.png)
+![Feature_2](screenshots/report.png)
 
 ## Setup and Execution
 
@@ -63,7 +66,6 @@ A registered Strava account is required to set up an app and access the Strava A
 **Launch Webpage**
 
 9. Click on the link that appears in your console upon running `app.py` and it should open `map.html`. The website is ready to go! ٩(ˊᗜˋ*)و ♡
-
 
 ## Database
 pgAdmin are used for spatial data storage and analysis.
@@ -120,6 +122,7 @@ pgAdmin are used for spatial data storage and analysis.
 
  ##
 _Thanks for reading! (=^･ω･^=)_
+
 
 
 
