@@ -126,6 +126,7 @@ pgAdmin is used for data storage and analysis.
     - Feature to view all reviews or all submitted reports.
     - Creating a feedback mechanism of confirming the existence and status of reported issues, such as a fallen tree on a trail (like in Waze), would add more database connections and also enable a more interactive user experience.
     - Allow users to have a "Use My Location!" feature or be able to pinpoint a specific location on a trail when reporting trial maintenance issues. This will allow for more accurate reports and faster responses.
+    - Have a features that allows users to post pictures of the trail, highlighting viewpoints along the ride.
 - Having an "About Us" page:
     - An "About Us" page would be useful and provide the user additional context, like how "MtB" in MtB Madeira stands for mountain biking. This is a good place to explain why mountain biking is a good way to see Madeira, and maybe why Madeira is so amazing for mountain biking.
     - This is also a good place to inform the user on website datasources (Strava, OSM, etc).
