@@ -103,7 +103,7 @@ pgAdmin is used for data storage and analysis.
 - Average trail rating data and most recent maintenance requests are called from the database back to the frontend to dynamically display user input.
 
 ## API
-- `GET /trails`: Retrieve running trail information
+- `GET /trails`: Retrieve trail information
 - `POST /reviews`: Submit ratings and reviews on specified trails
 - `POST /report`: Submit a maintenance report or issue on specified trails
 - `GET /trail_ratings`: Retrieve average trail rating submitted by users on specified trails
@@ -133,6 +133,7 @@ pgAdmin is used for data storage and analysis.
 
  ##
 _Thanks for reading! (=^･ω･^=)_
+
 
 
 
